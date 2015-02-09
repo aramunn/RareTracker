@@ -102,8 +102,8 @@ function RareTracker:new(o)
 		"Quin Flinkhand","Andara die Seherin","Crog der Schmetterer","ER-7 Kundschafter","AX-12 Verteidiger","Schorfklaue","Gorax der Faulige","Torgal der Verwüster","Alte Rumpelkiste","Schreckensknochen",
 		"Wächter Xeltos","Wächter Zelkix","Augmentierter Zornmeister","Steingedärm","Wildklaue","Grug der Scharfrichter","Faulzahn","Spalter Grogek","Flammenbinder Trovin","Königin Tizzet","Feuerstein",
 		"Grignak","Granitfaust","Dreich","Summuel","Weißzahn","Geröll","Lebensgraser","Blutmähne","Die Königin","Blinzli","Gammler","Der Lobotomisierer","Abgrund","Totenpfoten","Alphawache Eins",
-		"Alphawache Zwei","Transmutationsklinge","Vorgrimm"."Der Vultch","Todgraser","Endlosschlund","SubjektV - Sturm","SubjektJ - Scheusal","SubjektK - Widerling","Subjekt V - Sturm","Subjekt J - Scheusal",
-		"Subjekt K - Widerling","Schleifer","Kleinsinn","Wache KE-27","Auflader KE-28", "Subjekt: Tau"}
+		"Alphawache Zwei","Transmutationsklinge","Vorgrimm","Der Vultch","Todgraser","Endlosschlund","SubjektV - Sturm","SubjektJ - Scheusal","SubjektK - Widerling","Subjekt V - Sturm","Subjekt J - Scheusal",
+		"Subjekt K - Widerling","Schleifer","Kleinsinn","Wache KE-27","Auflader KE-28","Subjekt: Tau"}
     else
 		o.defaultRareNames = {}
 	end

@@ -53,7 +53,7 @@ function RareTracker:new(o)
   	self.__index = self
 
   	o.majorVersion = 1
-  	o.minorVersion = 3
+  	o.minorVersion = 4
   	o.newRares = false
   	o.rareMobs = {}
   	local strCancelLocale = Apollo.GetString(1);

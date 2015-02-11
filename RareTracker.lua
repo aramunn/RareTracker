@@ -421,7 +421,7 @@ function RareTracker:OnUnitCreated(unit)
         -- no quick way to party chat, need to find the channel first
         for _,channel in pairs(ChatSystemLib.GetChannels()) do
           if channel:GetType() == ChatSystemLib.ChatChannel_Party then
-channel:Send("Rare detected: " .. unit:GetName())
+            channel:Send("Rare detected: " .. unit:GetName())
           end
         end
       end

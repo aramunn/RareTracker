@@ -77,7 +77,7 @@ function RareTracker:new(o)
 		"Blubbergut","Frozenclaw","Stonegut","Savageclaw","Grug the Executioner","Blightfang","Basher Grogek","Flame-Binder Sorvel","Flame-Binder Trovin","Queen Tizzet","Dominator",
 		"Infinimaw","Bloodmane","\"Hotshot\" Braz","The Bumbler","Aeroth the Sentinel","Wretch the Impure","Gnarly Hookfoot","Radical Hookfoot","Dramatic Skug Queen","Soultaker",
 		"Bogus Fraz","Gnashing Cankertube Garr","The Stump","Fool's Gold","NG Protector One","Marmota","Ruga the Ageless","Lightback","Grace","Pusbelly","Randok","Tessa","Flood",
-		"Flametongue","Slab","Final Flight","The Enlightened","Growth","Proliferator","Tainted Drone","Tainted Direweb","Deathbite","The Outsider"}
+		"Flametongue","Slab","Final Flight","The Enlightened","Growth","Proliferator","Tainted Drone","Tainted Direweb","Deathbite","The Outsider","SCS Adjutant","Tharge the Waterseeker","Lazy Lenny"}
 	elseif strCancelLocale == "Annuler" then
     	o.defaultRareNames = {"Nomjin","Éclat de givre","Prodige","Dompteur Xix","Iiksy","Ombrechute","Leatherface","Tas de pierres","Endigueur","Souffletripe","Rongeur",
 		"Mortebranche","Ossanu","Verbois le Courrouceur","Acolytes verbois","Ashwin le Crêtetempête","Claymore XT-9","AG5 Blitzbuster","Nym, vierge de la pitié",

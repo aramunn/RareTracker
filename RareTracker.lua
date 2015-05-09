@@ -97,7 +97,7 @@ function RareTracker:new(o)
 		"Tripesuif","Griffegel","Tripes de pierre","Brutegriffe","Grug le bourreau","Rouillecroc","Dérouilleur Grogek","Attache-Flamme Sorvel","Attache-Flamme Trovin","Reine Tizzet","Dominateur",
 		"Mâchenéant","Sanguicrin","Cador Braz","L'Empoté","Aeroth la Sentinelle","Wretch l'Impur","Croche-pattes ratatiné","Croche-pattes radical","Reine skug dramatique","Mange-âme",
 		"Faux Friz","Garr chancretube grinçant","La Souche","L'or du fou","NG Premier Protecteur","Marmota","Ruga l'Éternel","Allègedos","Gracieux","Suppustule","Randok","Tessa","Inondation",
-		"Langueflamme","Bloc de pierre","Vol final","L'Illuminé","Croissance","Proliférateur","Frelon corrompu","Sinistoile impure","Crofuneste","L'Étranger"}
+		"Langueflamme","Bloc de pierre","Vol final","L'Illuminé","Croissance","Proliférateur","Frelon corrompu","Sinistoile impure","Crofuneste","L'Étranger","Instructuer SSC","Tharge le Sourcier","Lenny le Fainéant"}
     elseif strCancelLocale == "Abbrechen" then
     	o.defaultRareNames = {"Nomjin","Frostscherbe","Wunderkind","Bestienmeisterin Xix","Iiksy","Schattenfall","Leatherface","Steinhaufen","Stehmann","Orkanbauch","Kauer",
 		"Totzweig","Blankknochen","Wurmholz der Geistermacher","Wurmholz-Akolyth","Ashwin der Sturmbedeckte","Claymore XT-9","Blitzjäger AG5","Nym Jungfrau der Gnade",
@@ -117,7 +117,7 @@ function RareTracker:new(o)
 		"Speckbauch","Frostklaue","Steingedärm","Wildklaue","Grug der Scharfrichter","Faulzahn","Spalter Grogek","Flammenbinder Sorvel","Flammenbinder Trovin","Königin Tizzet","Dominator",
 		"Endlosschlund","Blutmähne","\"„Teufelskerl“\" Braz","Der Summser","Aeroth der Wachhabende","Teufel der Unreine","Knorriger Hakenfuß","Radikaler Hakenfuß","Dramatische Skugkönigin","Seelennehmer",
 		"Bogus Fraz","Knirschender Wucher-Garr","Der Stumpf","Narrengold","NG-Protektor Eins","Marmota","Ruga der Alterslose","Leichtschulter","Liebreiz","Eiterbauch","Randok","Tessa","Flut",
-		"Flammenzunge","Steinplatte","Finalflug","Der Erleuchtete","Wuchs","Vermehrer","Verdorbene Drohne","Finsternetz-Verdorbener","Todesbiss","Der Außenseiter"}
+		"Flammenzunge","Steinplatte","Finalflug","Der Erleuchtete","Wuchs","Vermehrer","Verdorbene Drohne","Finsternetz-Verdorbener","Todesbiss","Der Außenseiter","SKS-Adjutant","Wassersucher Tharge","Fauler Lenny"}
     else
 		o.defaultRareNames = {}
 	end

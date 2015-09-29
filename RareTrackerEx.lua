@@ -1,14 +1,14 @@
 -----------------------------------------------------------------------------------------------
--- Client Lua Script for RareTracker
+-- Client Lua Script for RareTrackerEx
 -- Copyright (c) NCsoft. All rights reserved
 -----------------------------------------------------------------------------------------------
- 
+require "Apollo"
 require "Window"
  
 -----------------------------------------------------------------------------------------------
 -- Module Definition
 -----------------------------------------------------------------------------------------------
-local RareTracker = {} 
+local RareTrackerEx = {} 
  
 -----------------------------------------------------------------------------------------------
 -- Constants
@@ -36,30 +36,38 @@ function table.find(val, list)
   return false
 end
 
-function table.shallow_copy(t)
-  local t2 = {}
-  for k,v in pairs(t) do
-    t2[k] = v
+local function shallowcopy(orig)
+  local orig_type = type(orig)
+  local copy
+  if orig_type == 'table' then
+      copy = {}
+      for orig_key, orig_value in pairs(orig) do
+          copy[orig_key] = orig_value
+      end
+  else -- number, string, boolean, etc
+      copy = orig
   end
-  return t2
+  
+  return copy
 end
  
 -----------------------------------------------------------------------------------------------
 -- Initialization
 -----------------------------------------------------------------------------------------------
-function RareTracker:new(o)
+function RareTrackerEx:new(o)
 	o = o or {}
-  	setmetatable(o, self)
-  	self.__index = self
+	setmetatable(o, self)
+	self.__index = self
 
-  	o.majorVersion = 1
-  	o.minorVersion = 4
-  	o.newRares = false
-  	o.rareMobs = {}
-  	local strCancelLocale = Apollo.GetString(1);
+	self.majorVersion = 1
+	self.minorVersion = 6
+	self.newRares = false
+	self.rareMobs = {}
+	
+	local strCancelLocale = Apollo.GetString("CRB_Cancel");
   	
-    if strCancelLocale == "Cancel" then
-    	o.defaultRareNames = {"Nomjin","Frostshard","Prodigy","Beastmaster Xix","Iiksy","Shadowfall","Leatherface","Stonepile","Stanch","Galegut","Gnawer",
+  if strCancelLocale == "Cancel" then
+	 self.defaultRareNames = {"Nomjin","Frostshard","Prodigy","Beastmaster Xix","Iiksy","Shadowfall","Leatherface","Stonepile","Stanch","Galegut","Gnawer",
 		"Deadbough","Barebones","Wormwood the Wraithmaker","Wormwood Acolyte","Ashwin the Stormcrested","Claymore XT-9","AG5 Blitzbuster","Nym Maiden of Mercy",
 		"Asteria","Acacia","Atethys","Mikolai the Malevolent","The Shadow Queen","XL-51 Goliath","Queen Bizzelt","Captain Fripeti","Groundswell Guardsman",
 		"RG3 Blitzbuster","Brigadier Bellza","Black Besieger","Exterminator Cryvex","Veshra the Eye of the Storm","Slopper","Gravek the Swale-Striker","Veldrok the Vindicator",
@@ -79,7 +87,7 @@ function RareTracker:new(o)
 		"Bogus Fraz","Gnashing Cankertube Garr","The Stump","Fool's Gold","NG Protector One","Marmota","Ruga the Ageless","Lightback","Grace","Pusbelly","Randok","Tessa","Flood",
 		"Flametongue","Slab","Final Flight","The Enlightened","Growth","Proliferator","Tainted Drone","Tainted Direweb","Deathbite","The Outsider","SCS Adjutant","Tharge the Waterseeker","Lazy Lenny"}
 	elseif strCancelLocale == "Annuler" then
-    	o.defaultRareNames = {"Nomjin","Éclat de givre","Prodige","Dompteur Xix","Iiksy","Ombrechute","Leatherface","Tas de pierres","Endigueur","Souffletripe","Rongeur",
+	 self.defaultRareNames = {"Nomjin","Éclat de givre","Prodige","Dompteur Xix","Iiksy","Ombrechute","Leatherface","Tas de pierres","Endigueur","Souffletripe","Rongeur",
 		"Mortebranche","Ossanu","Verbois le Courrouceur","Acolytes verbois","Ashwin le Crêtetempête","Claymore XT-9","AG5 Blitzbuster","Nym, vierge de la pitié",
 		"Asteria","Acacia","Atethys","Mikolai le malfaisant","La reine des ombres","Goliath XL-51","Reine Bizzbizze","Captaine Fripeti","Garde du Tellurixe",
 		"Bombardeur RG3","Brigadier Bellza","Assiégeant noir","Exterminateur Cryvex","Veshra l'œil du cyclone","Renverseur","Gravek le Frappefosse","Veldrok le Vengeur",
@@ -98,8 +106,8 @@ function RareTracker:new(o)
 		"Mâchenéant","Sanguicrin","Cador Braz","L'Empoté","Aeroth la Sentinelle","Wretch l'Impur","Croche-pattes ratatiné","Croche-pattes radical","Reine skug dramatique","Mange-âme",
 		"Faux Friz","Garr chancretube grinçant","La Souche","L'or du fou","NG Premier Protecteur","Marmota","Ruga l'Éternel","Allègedos","Gracieux","Suppustule","Randok","Tessa","Inondation",
 		"Langueflamme","Bloc de pierre","Vol final","L'Illuminé","Croissance","Proliférateur","Frelon corrompu","Sinistoile impure","Crofuneste","L'Étranger","Instructuer SSC","Tharge le Sourcier","Lenny le Fainéant"}
-    elseif strCancelLocale == "Abbrechen" then
-    	o.defaultRareNames = {"Nomjin","Frostscherbe","Wunderkind","Bestienmeisterin Xix","Iiksy","Schattenfall","Leatherface","Steinhaufen","Stehmann","Orkanbauch","Kauer",
+  elseif strCancelLocale == "Abbrechen" then
+	 self.defaultRareNames = {"Nomjin","Frostscherbe","Wunderkind","Bestienmeisterin Xix","Iiksy","Schattenfall","Leatherface","Steinhaufen","Stehmann","Orkanbauch","Kauer",
 		"Totzweig","Blankknochen","Wurmholz der Geistermacher","Wurmholz-Akolyth","Ashwin der Sturmbedeckte","Claymore XT-9","Blitzjäger AG5","Nym Jungfrau der Gnade",
 		"Asteria","Acacia","Atethys","Mikolai der Grausame","Die Schattenkönigin","XL-51 Goliath","Königin Bizzelt","Captain Fripeti","Schwellgrund-Wachmann",
 		"RG3-Blitzjäger","Brigadekommandeur Bellza","Schwarzer Belagerer","Exterminator Cryvex","Veshra, das Auge des Sturms","Schwapper","Gravek der Muldenschläger","Veldrok der Verteidiger",
@@ -118,18 +126,18 @@ function RareTracker:new(o)
 		"Endlosschlund","Blutmähne","\"„Teufelskerl“\" Braz","Der Summser","Aeroth der Wachhabende","Teufel der Unreine","Knorriger Hakenfuß","Radikaler Hakenfuß","Dramatische Skugkönigin","Seelennehmer",
 		"Bogus Fraz","Knirschender Wucher-Garr","Der Stumpf","Narrengold","NG-Protektor Eins","Marmota","Ruga der Alterslose","Leichtschulter","Liebreiz","Eiterbauch","Randok","Tessa","Flut",
 		"Flammenzunge","Steinplatte","Finalflug","Der Erleuchtete","Wuchs","Vermehrer","Verdorbene Drohne","Finsternetz-Verdorbener","Todesbiss","Der Außenseiter","SKS-Adjutant","Wassersucher Tharge","Fauler Lenny"}
-    else
-		o.defaultRareNames = {}
+  else
+		self.defaultRareNames = {}
 	end
 
-  	table.sort(o.defaultRareNames)
-	o.selectedRareWindow = nil
-  	return o
+	table.sort(self.defaultRareNames)
+  self.selectedRareWindow = nil
+	return o
 end
 
-function RareTracker:Init()
+function RareTrackerEx:Init()
 	local bHasConfigureFunction = true
-	local strConfigureButtonText = "RareTracker"
+	local strConfigureButtonText = "RareTrackerEx"
 	local tDependencies = {
 	}
     
@@ -137,12 +145,12 @@ function RareTracker:Init()
 end
  
 
-function RareTracker:OnLoad()
-	self.xmlDoc = XmlDoc.CreateFromFile("RareTracker.xml")
+function RareTrackerEx:OnLoad()
+	self.xmlDoc = XmlDoc.CreateFromFile("RareTrackerEx.xml")
 	self.xmlDoc:RegisterCallback("OnDocLoaded", self)
 end
 
-function RareTracker:OnDocLoaded()
+function RareTrackerEx:OnDocLoaded()
 	if self.xmlDoc ~= nil and self.xmlDoc:IsLoaded() then
     self.mainWindow = Apollo.LoadForm(self.xmlDoc, "RareTrackerForm", nil, self)
     
@@ -154,8 +162,8 @@ function RareTracker:OnDocLoaded()
   	self.trackedRaresWindow = self.mainWindow:FindChild("TrackedRaresList")
     self.mainWindow:Show(false, true)
 
-  	Apollo.RegisterSlashCommand("raretracker", "OnRareTrackerOn", self)
-    Apollo.RegisterSlashCommand("rt", "OnRareTrackerOn", self)
+  	Apollo.RegisterSlashCommand("raretracker", "OnRareTrackerExOn", self)
+    Apollo.RegisterSlashCommand("rt", "OnRareTrackerExOn", self)
     Apollo.RegisterEventHandler("UnitCreated", "OnUnitCreated", self)
     Apollo.RegisterEventHandler("UnitDestroyed", "OnUnitDestroyed", self)
     Apollo.RegisterEventHandler("WindowManagementReady", "OnWindowManagementReady", self)
@@ -175,7 +183,7 @@ function RareTracker:OnDocLoaded()
 	end
 end
 
-function RareTracker:InitConfigOptions() 
+function RareTrackerEx:InitConfigOptions() 
   if self.minLevel == nil then
     self.minLevel = 1
   end
@@ -219,23 +227,23 @@ function RareTracker:InitConfigOptions()
   end
 end
 
-function RareTracker:ShowResetRareListPrompt()
-  self.resetWindow = Apollo.LoadForm(self.xmlDoc, "ResetConfirmationForm", nil, self)
+function RareTrackerEx:ShowResetRareListPrompt()
+  self.resetWindow = Apollo.LoadForm("RareTrackerEx.xml", "ResetConfirmationForm", nil, self)
 end
 
-function RareTracker:OnResetRaresButton()
-  self.rareNames = table.shallow_copy(self.defaultRareNames)
+function RareTrackerEx:OnResetRaresButton()
+  self.rareNames = shallowcopy(self.defaultRareNames)
   if self.configWindow ~= nil then
     self.configWindow:Close()
   end
   self.resetWindow:Close()
 end
 
-function RareTracker:OnResetWindowClose()
+function RareTrackerEx:OnResetWindowClose()
   self.resetWindow:Close()
 end
 
-function RareTracker:InitTrackMaster()
+function RareTrackerEx:InitTrackMaster()
   self.trackMaster = Apollo.GetAddon("TrackMaster")
 
   if self.trackMaster ~= nil then
@@ -247,7 +255,7 @@ function RareTracker:InitTrackMaster()
       self.trackMasterEnabled = true
     end
 
-    self.trackMaster:AddToConfigMenu(self.trackMaster.Type.Track, "   RareTracker", {
+    self.trackMaster:AddToConfigMenu(self.trackMaster.Type.Track, "   RareTrackerEx", {
       CanFire = false,
       CanEnable = true,
       IsChecked = self.trackMasterEnabled,
@@ -270,7 +278,7 @@ end
 -----------------------------------------------------------------------------------------------
 -- Carbine Event Callbacks
 -----------------------------------------------------------------------------------------------
-function RareTracker:OnSave(saveLevel)
+function RareTrackerEx:OnSave(saveLevel)
   if saveLevel ~= GameLib.CodeEnumAddonSaveLevel.Character then
     return nil
   end
@@ -300,7 +308,7 @@ function RareTracker:OnSave(saveLevel)
   return savedData
 end
 
-function RareTracker:OnRestore(saveLevel, savedData)
+function RareTrackerEx:OnRestore(saveLevel, savedData)
   if (savedData.minLevel ~= nil) then
     self.minLevel = savedData.minLevel
   end
@@ -354,22 +362,22 @@ function RareTracker:OnRestore(saveLevel, savedData)
   end    
 end
 
-function RareTracker:OnWindowManagementReady()
-  Event_FireGenericEvent("WindowManagementAdd", {wnd = self.mainWindow, strName = "RareTracker"})
+function RareTrackerEx:OnWindowManagementReady()
+  Event_FireGenericEvent("WindowManagementAdd", {wnd = self.mainWindow, strName = "RareTrackerEx"})
 end
 
 -----------------------------------------------------------------------------------------------
--- RareTracker Functions
+-- RareTrackerEx Functions
 -----------------------------------------------------------------------------------------------
-function RareTracker:OnRareTrackerOn()
+function RareTrackerEx:OnRareTrackerExOn()
 	self.mainWindow:Invoke()
 end
 
-function RareTracker:OnClose()
+function RareTrackerEx:OnClose()
   self.mainWindow:Close()
 end
 
-function RareTracker:OnTimer()
+function RareTrackerEx:OnTimer()
   local trackObj, distance
 
   for idx,item in pairs(self.rareMobs) do
@@ -395,13 +403,13 @@ function RareTracker:OnTimer()
   end
 end
 
-function RareTracker:OnAutoCloseTimer()
+function RareTrackerEx:OnAutoCloseTimer()
   if #self.trackedRaresWindow:GetChildren() == 0 and self.closeEmptyTracker then
     self.mainWindow:Close()
   end
 end
 
-function RareTracker:OnUnitCreated(unit)
+function RareTrackerEx:OnUnitCreated(unit)
   local disposition = unit:GetDispositionTo(GameLib.GetPlayerUnit())
   local unitName = trim(unit:GetName())
 
@@ -434,15 +442,15 @@ function RareTracker:OnUnitCreated(unit)
   end
 end
 
-function RareTracker:OnUnitDestroyed(unit)
+function RareTrackerEx:OnUnitDestroyed(unit)
   local unit = self.rareMobs[unit:GetName()]
   if unit ~= nil then
     self:DeactivateUnit(unit)
   end
 end
 
-function RareTracker:AddTrackedRare(unit)
-  local wnd = Apollo.LoadForm(self.xmlDoc, "TrackedRare", self.trackedRaresWindow, self)
+function RareTrackerEx:AddTrackedRare(unit)
+  local wnd = Apollo.LoadForm("RareTrackerEx.xml", "TrackedRare", self.trackedRaresWindow, self)
 
   local name = unit:GetName()
 
@@ -463,7 +471,7 @@ function RareTracker:AddTrackedRare(unit)
   self:ActivateUnit(self.rareMobs[name], unit)
 end
 
-function RareTracker:RemoveTrackedRare(windowControl)
+function RareTrackerEx:RemoveTrackedRare(windowControl)
   if windowControl == self.selectedRareWindow then
     self.selectedRareWindow = nil
   end
@@ -483,7 +491,7 @@ function RareTracker:RemoveTrackedRare(windowControl)
   self.trackedRaresWindow:ArrangeChildrenVert()
 end
 
-function RareTracker:ActivateUnit(item, unit)
+function RareTrackerEx:ActivateUnit(item, unit)
   local wnd = item.wnd
 
   item.unit = unit
@@ -495,7 +503,7 @@ function RareTracker:ActivateUnit(item, unit)
   wnd:SetData(item)
 end
 
-function RareTracker:DeactivateUnit(item)
+function RareTrackerEx:DeactivateUnit(item)
   local wnd = item.wnd
 
   item.unit = nil
@@ -512,7 +520,7 @@ function RareTracker:DeactivateUnit(item)
   wnd:SetData(item)
 end
 
-function RareTracker:OnTrackedRareClick(windowHandler, windowControl, mouseButton)
+function RareTrackerEx:OnTrackedRareClick(windowHandler, windowControl, mouseButton)
   if windowHandler ~= windowControl then
     return
   end
@@ -556,7 +564,7 @@ function RareTracker:OnTrackedRareClick(windowHandler, windowControl, mouseButto
 end
 
 -- credit to Caedo for this function, taken from his TrackMaster addon
-function RareTracker:GetDistance(target)
+function RareTrackerEx:GetDistance(target)
   if GameLib.GetPlayerUnit() ~= nil then
     local playerPos = GameLib.GetPlayerUnit():GetPosition()
     local playerVec = Vector3.New(playerPos.x, playerPos.y, playerPos.z)
@@ -581,13 +589,13 @@ end
 -----------------------------------------------------------------------------------------------
 -- Config Menu Functions
 -----------------------------------------------------------------------------------------------
-function RareTracker:OnConfigure()
+function RareTrackerEx:OnConfigure()
   if self.configWindow ~= nil then
     self.configWindow:Destroy()
     self.configWindow = nil
   end
 
-  self.configWindow = Apollo.LoadForm(self.xmlDoc, "ConfigForm", nil, self)
+  self.configWindow = Apollo.LoadForm("RareTrackerEx.xml", "ConfigForm", nil, self)  
   self.configRaresList = self.configWindow:FindChild("RareListContainer:RareList")
 
   self:AddAllUnits()
@@ -597,23 +605,24 @@ function RareTracker:OnConfigure()
   self.configWindow:FindChild("PlaySoundContainer:RadioButton"):SetCheck(self.playSound)
   self.configWindow:FindChild("ShowHintArrowContainer:RadioButton"):SetCheck(self.showIndicator)
   self.configWindow:FindChild("CloseEmptyTrackerContainer:RadioButton"):SetCheck(self.closeEmptyTracker)
-  self.configWindow:FindChild("MinLevelContainer:DaysContainer:minLevelInput"):SetText(self.minLevel)
-  self.configWindow:FindChild("MaxTrackingDistanceContainer:DistanceContainer:maxDistanceInput"):SetText(self.maxTrackingDistance)
+  self.configWindow:FindChild("MinLevelContainer:DaysContainer:minLevelInput"):SetText(self.minLevel or 1)
+  self.configWindow:FindChild("MaxTrackingDistanceContainer:DistanceContainer:maxDistanceInput"):SetText(self.maxTrackingDistance or 1000)
 end
 
-function RareTracker:AddAllUnits()
+function RareTrackerEx:AddAllUnits()
   self:BuildAchievementList()
-
+  self.rareNames = shallowcopy(self.defaultRareNames)
+  
   for _,item in pairs(self.rareNames) do
     self:AddConfigRareItem(item, false)
   end
 
-  for _,item in pairs(self.customNames) do
+  for _,item in pairs(self.customNames or {}) do
     self:AddConfigRareItem(item, true)
   end
 end
 
-function RareTracker:BuildAchievementList()
+function RareTrackerEx:BuildAchievementList()
   local achievements = AchievementsLib.GetAchievements()
 
   self.achievementEntries = {}
@@ -627,8 +636,8 @@ function RareTracker:BuildAchievementList()
   end
 end
 
-function RareTracker:AddConfigRareItem(item, isCustom)
-  local wnd = Apollo.LoadForm(self.xmlDoc, "ConfigListItem", self.configRaresList, self)
+function RareTrackerEx:AddConfigRareItem(item, isCustom)
+  local wnd = Apollo.LoadForm("RareTrackerEx.xml", "ConfigListItem", self.configRaresList, self)
   wnd:FindChild("Name"):SetText(item)
 
   if isCustom then
@@ -644,7 +653,7 @@ function RareTracker:AddConfigRareItem(item, isCustom)
   self.configRaresList:ArrangeChildrenVert()
 end
 
-function RareTracker:DeleteConfigRareItem(item, isCustom, listItemWindow)
+function RareTrackerEx:DeleteConfigRareItem(item, isCustom, listItemWindow)
   local name = listItemWindow:FindChild("Name"):GetText()
   local unitList
 
@@ -664,7 +673,7 @@ function RareTracker:DeleteConfigRareItem(item, isCustom, listItemWindow)
   end
 end
 
-function RareTracker:OnAddUnit()
+function RareTrackerEx:OnAddUnit()
   local inputWindow = self.configWindow:FindChild("RareListContainer:InputContainer:UnitInput")
   local unitName = inputWindow:GetText()
   if unitName ~= "Enter unit name..." then
@@ -675,14 +684,14 @@ function RareTracker:OnAddUnit()
   end
 end
 
-function RareTracker:OnDeleteUnit(windowHandler, windowControl)
+function RareTrackerEx:OnDeleteUnit(windowHandler, windowControl)
   local listItemWindow = windowHandler:GetParent()
   local isCustom = listItemWindow:GetData().isCustom
 
   self:DeleteConfigRareItem(item, isCustom, listItemWindow)
 end
 
-function RareTracker:OnResetButton()
+function RareTrackerEx:OnResetButton()
   self.rareNames = table.shallow_copy(self.defaultRareNames)
   self.configRaresList:DestroyChildren()
 
@@ -690,49 +699,49 @@ function RareTracker:OnResetButton()
   self.configRaresList:SetVScrollPos(0)
 end
 
-function RareTracker:OnEnableTrackingCheck(windowHandler, windowControl)
+function RareTrackerEx:OnEnableTrackingCheck(windowHandler, windowControl)
   self.enableTracking = true
   Apollo.RegisterEventHandler("UnitCreated", "OnUnitCreated", self)
 end
 
-function RareTracker:OnEnableTrackingUncheck(windowHandler, windowControl)
+function RareTrackerEx:OnEnableTrackingUncheck(windowHandler, windowControl)
   self.enableTracking = false
   Apollo.RemoveEventHandler("UnitCreated", self)
 end
 
-function RareTracker:OnBroadcastCheck(windowHandler, windowControl)
+function RareTrackerEx:OnBroadcastCheck(windowHandler, windowControl)
   self.broadcastToParty = true
 end
 
-function RareTracker:OnBroadcastUncheck(windowHandler, windowControl)
+function RareTrackerEx:OnBroadcastUncheck(windowHandler, windowControl)
   self.broadcastToParty = false
 end
 
-function RareTracker:OnPlaySoundCheck(windowHandler, windowControl)
+function RareTrackerEx:OnPlaySoundCheck(windowHandler, windowControl)
   self.playSound = true
 end
 
-function RareTracker:OnPlaySoundUncheck(windowHandler, windowControl)
+function RareTrackerEx:OnPlaySoundUncheck(windowHandler, windowControl)
   self.playSound = false
 end
 
-function RareTracker:OnShowIndicatorCheck(windowHandler, windowControl)
+function RareTrackerEx:OnShowIndicatorCheck(windowHandler, windowControl)
   self.showIndicator = true
 end
 
-function RareTracker:OnShowIndicatorUncheck(windowHandler, windowControl)
+function RareTrackerEx:OnShowIndicatorUncheck(windowHandler, windowControl)
   self.showIndicator = false
 end
 
-function RareTracker:OnAutoCloseEmptyTrackerCheck(windowHandler, windowControl)
+function RareTrackerEx:OnAutoCloseEmptyTrackerCheck(windowHandler, windowControl)
   self.closeEmptyTracker = true
 end
 
-function RareTracker:OnAutoCloseEmptyTrackerUncheck(windowHandler, windowControl)
+function RareTrackerEx:OnAutoCloseEmptyTrackerUncheck(windowHandler, windowControl)
   self.closeEmptyTracker = false
 end
 
-function RareTracker:OnMinLevelChange(windowHandler, windowControl, strText)
+function RareTrackerEx:OnMinLevelChange(windowHandler, windowControl, strText)
   local minLevel = tonumber(strText)
   if minLevel ~= nil then
     self.minLevel = math.floor(minLevel)
@@ -741,7 +750,7 @@ function RareTracker:OnMinLevelChange(windowHandler, windowControl, strText)
   end
 end
 
-function RareTracker:OnMaxDistanceChange(windowHandler, windowControl, strText)
+function RareTrackerEx:OnMaxDistanceChange(windowHandler, windowControl, strText)
   local maxDistance = tonumber(strText)
   if maxDistance ~= nil then
     self.maxTrackingDistance = math.floor(maxDistance)
@@ -750,12 +759,12 @@ function RareTracker:OnMaxDistanceChange(windowHandler, windowControl, strText)
   end
 end
 
-function RareTracker:OnOptionsClose()
+function RareTrackerEx:OnOptionsClose()
   self.configWindow:Close()
 end
 
 -----------------------------------------------------------------------------------------------
--- RareTracker Instance
+-- RareTrackerEx Instance
 -----------------------------------------------------------------------------------------------
-local RareTrackerInst = RareTracker:new()
-RareTrackerInst:Init()
+local RareTrackerExInst = RareTrackerEx:new()
+RareTrackerExInst:Init()

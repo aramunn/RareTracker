@@ -168,6 +168,7 @@ function RareTracker:OnDocLoaded()
 
   	self.trackedRaresWindow = self.wndMain:FindChild("TrackedRaresList")
     self.wndMain:Show(false, true)
+    self:LoadPosition()
 
   	Apollo.RegisterSlashCommand("raretracker", "OnSlashCommand", self)
     Apollo.RegisterSlashCommand("rt", "OnSlashCommand", self)
@@ -259,8 +260,8 @@ end
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnResetRaresButton()
   self.arRareNames = shallowcopy(self.arDefaultRareNames)
-  if self.configWindow ~= nil then
-    self.configWindow:Close()
+  if self.wndConfig ~= nil then
+    self.wndConfig:Close()
   end
   self.resetWindow:Close()
 end
@@ -318,6 +319,35 @@ function RareTracker:InitTrackMaster()
 end
 
 -----------------------------------------------------------------------------------------------
+-- StorePositions
+--
+-- Stores the windows positions in the local table so it can be saved.
+-----------------------------------------------------------------------------------------------
+function RareTracker:StorePosition()
+  self.tLocations = {
+    tMainWindowLocation = self.wndMain and self.wndMain:GetLocation():ToTable(),
+    tConfigWindowLocation = self.wndConfig and self.wndConfig:GetLocation():ToTable()
+  }
+end
+
+-----------------------------------------------------------------------------------------------
+-- LoadPositions
+-- 
+-- Restores the windows positions by reading out the location information from the table.
+-----------------------------------------------------------------------------------------------
+function RareTracker:LoadPosition()
+  if self.tLocations and self.tLocations.tMainWindowLocation and self.wndMain then
+    local tLocation = WindowLocation.new(self.tLocations.tMainWindowLocation)
+    self.wndMain:MoveToLocation(tLocation)
+  end
+  
+  if self.tLocations and self.tLocations.tConfigWindowLocation and self.wndConfig then
+    local tLocation = WindowLocation.new(self.tLocations.tConfigWindowLocation)
+    self.wndConfig:MoveToLocation(tLocation)
+  end
+end
+
+-----------------------------------------------------------------------------------------------
 -- OnSave
 -- 
 -- Callback from the Client when the Addon needs to save it's data.
@@ -329,6 +359,8 @@ function RareTracker:OnSave(eLevel)
 
   local tSavedData = {}
 
+  self:StorePosition()
+  
   if (type(self.minLevel) == 'number') then
     tSavedData.minLevel = math.floor(self.minLevel)
   end
@@ -348,6 +380,7 @@ function RareTracker:OnSave(eLevel)
   tSavedData.trackMasterEnabled = self.bTrackMasterEnabled
   tSavedData.savedMinorVersion = self.nMinorVersion
   tSavedData.savedMajorVersion = self.nMajorVersion
+  tSavedData.tLocations = self.tLocations
 
   return tSavedData
 end
@@ -412,6 +445,10 @@ function RareTracker:OnRestore(eLevel, tData)
 
   if (tData.savedMinorVersion ~= nil) then
     self.savedMinorVersion = tData.savedMinorVersion
+  end
+  
+  if (tData.tLocations ~= nil) then
+    self.tLocations = tData.tLocations
   end    
 end
 
@@ -435,9 +472,11 @@ end
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnSlashCommand()
 	self.wndMain:Invoke()
+	self:LoadPosition()
 end
 
 function RareTracker:OnClose()
+  self:StorePosition()
   self.wndMain:Close()
 end
 
@@ -475,6 +514,7 @@ end
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnAutoCloseTimer()
   if #self.trackedRaresWindow:GetChildren() == 0 and self.closeEmptyTracker then
+    self:StorePosition()
     self.wndMain:Close()
   end
 end
@@ -711,23 +751,26 @@ end
 -- Callback from the client when the player clicks the config button from the main menu
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnConfigure()
-  if self.configWindow ~= nil then
-    self.configWindow:Destroy()
-    self.configWindow = nil
+  if self.wndConfig ~= nil then
+    self.wndConfig:Destroy()
+    self.wndConfig = nil
   end
 
-  self.configWindow = Apollo.LoadForm("RareTracker.xml", "ConfigForm", nil, self)  
-  self.configRaresList = self.configWindow:FindChild("RareListContainer:RareList")
+  self.wndConfig = Apollo.LoadForm("RareTracker.xml", "ConfigForm", nil, self)
+  
+  self:LoadPosition()
+    
+  self.configRaresList = self.wndConfig:FindChild("RareListContainer:RareList")
 
   self:AddAllUnits()
 
-  self.configWindow:FindChild("EnableTrackingContainer:RadioButton"):SetCheck(self.enableTracking)
-  self.configWindow:FindChild("BroadcastContainer:RadioButton"):SetCheck(self.broadcastToParty)
-  self.configWindow:FindChild("PlaySoundContainer:RadioButton"):SetCheck(self.playSound)
-  self.configWindow:FindChild("ShowHintArrowContainer:RadioButton"):SetCheck(self.showIndicator)
-  self.configWindow:FindChild("CloseEmptyTrackerContainer:RadioButton"):SetCheck(self.closeEmptyTracker)
-  self.configWindow:FindChild("MinLevelContainer:DaysContainer:minLevelInput"):SetText(self.minLevel or 1)
-  self.configWindow:FindChild("MaxTrackingDistanceContainer:DistanceContainer:maxDistanceInput"):SetText(self.maxTrackingDistance or 1000)
+  self.wndConfig:FindChild("EnableTrackingContainer:RadioButton"):SetCheck(self.enableTracking)
+  self.wndConfig:FindChild("BroadcastContainer:RadioButton"):SetCheck(self.broadcastToParty)
+  self.wndConfig:FindChild("PlaySoundContainer:RadioButton"):SetCheck(self.playSound)
+  self.wndConfig:FindChild("ShowHintArrowContainer:RadioButton"):SetCheck(self.showIndicator)
+  self.wndConfig:FindChild("CloseEmptyTrackerContainer:RadioButton"):SetCheck(self.closeEmptyTracker)
+  self.wndConfig:FindChild("MinLevelContainer:DaysContainer:minLevelInput"):SetText(self.minLevel or 1)
+  self.wndConfig:FindChild("MaxTrackingDistanceContainer:DistanceContainer:maxDistanceInput"):SetText(self.maxTrackingDistance or 1000)
 end
 
 -----------------------------------------------------------------------------------------------
@@ -822,7 +865,7 @@ end
 -- Used for updating the input window
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnAddUnit()
-  local inputWindow = self.configWindow:FindChild("RareListContainer:InputContainer:UnitInput")
+  local inputWindow = self.wndConfig:FindChild("RareListContainer:InputContainer:UnitInput")
   local unitName = inputWindow:GetText()
   if unitName ~= "Enter unit name..." then
     self:AddConfigRareItem(unitName, true)
@@ -917,7 +960,8 @@ function RareTracker:OnMaxDistanceChange(windowHandler, windowControl, strText)
 end
 
 function RareTracker:OnOptionsClose()
-  self.configWindow:Close()
+  self:StorePosition()
+  self.wndConfig:Close()
 end
 
 -----------------------------------------------------------------------------------------------

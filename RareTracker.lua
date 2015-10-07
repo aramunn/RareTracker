@@ -532,7 +532,6 @@ function RareTracker:OnUnitCreated(unitCreated)
 
   if unitCreated:IsValid() and not unitCreated:IsDead() and not unitCreated:IsACharacter() and 
      (unitCreated:GetLevel() ~= nil and unitCreated:GetLevel() >= self.minLevel) and
-     (tDisposition == Unit.CodeEnumDisposition.Hostile or tDisposition == Unit.CodeEnumDisposition.Neutral) and
      (table.find(strUnitName, self.arRareNames) or table.find(strUnitName, self.customNames)) then
     
     local unitRare = self.arRareMobs[unitCreated:GetName()]

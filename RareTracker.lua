@@ -226,8 +226,8 @@ function RareTracker:InitConfigOptions()
     self.closeEmptyTracker = true
   end
 
-  if self.customNames == nil then
-    self.customNames = {}
+  if self.arCustomNames == nil then
+    self.arCustomNames = {}
   end
 
   if (self.savedMajorVersion == nil or self.savedMinorVersion == nil or self.savedMajorVersion < self.nMajorVersion) and self.bNewRares and self.arRareNames ~= nil then
@@ -375,7 +375,7 @@ function RareTracker:OnSave(eLevel)
   tSavedData.showIndicator = self.showIndicator
   tSavedData.closeEmptyTracker = self.closeEmptyTracker
   tSavedData.rareNames = self.arRareNames
-  tSavedData.customNames = self.customNames
+  tSavedData.customNames = self.arCustomNames
   tSavedData.trackMasterLine = self.trackMasterLine
   tSavedData.trackMasterEnabled = self.bTrackMasterEnabled
   tSavedData.savedMinorVersion = self.nMinorVersion
@@ -428,7 +428,7 @@ function RareTracker:OnRestore(eLevel, tData)
   end  
 
   if (tData.customNames ~= nil) then
-    self.customNames = tData.customNames
+    self.arCustomNames = tData.customNames
   end
 
   if (tData.trackMasterLine ~= nil) then
@@ -531,8 +531,8 @@ function RareTracker:OnUnitCreated(unitCreated)
   local strUnitName = trim(unitCreated:GetName())
 
   if unitCreated:IsValid() and not unitCreated:IsDead() and not unitCreated:IsACharacter() and 
-     (unitCreated:GetLevel() ~= nil and unitCreated:GetLevel() >= self.minLevel) and
-     (table.find(strUnitName, self.arRareNames) or table.find(strUnitName, self.customNames)) then
+     ((unitCreated:GetLevel() or self.minLevel) >= self.minLevel) and
+     (table.find(strUnitName, self.arRareNames) or table.find(strUnitName, self.arCustomNames)) then
     
     local unitRare = self.arRareMobs[unitCreated:GetName()]
     if not unitRare then
@@ -786,7 +786,7 @@ function RareTracker:AddAllUnits()
     self:AddConfigRareItem(item, false)
   end
 
-  for _,item in pairs(self.customNames or {}) do
+  for _,item in pairs(self.arCustomNames or {}) do
     self:AddConfigRareItem(item, true)
   end
 end
@@ -842,7 +842,7 @@ function RareTracker:DeleteConfigRareItem(item, isCustom, listItemWindow)
   local unitList
 
   if isCustom then
-    unitList = self.customNames
+    unitList = self.arCustomNames
   else
     unitList = self.arRareNames
   end
@@ -868,7 +868,7 @@ function RareTracker:OnAddUnit()
   local unitName = inputWindow:GetText()
   if unitName ~= "Enter unit name..." then
     self:AddConfigRareItem(unitName, true)
-    table.insert(self.customNames, trim(unitName))
+    table.insert(self.arCustomNames, trim(unitName))
     inputWindow:SetText("Enter unit name...")
     self.configRaresList:SetVScrollPos(self.configRaresList:GetVScrollRange())
   end

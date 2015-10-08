@@ -527,7 +527,9 @@ end
 -- window when we have to.
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnUnitCreated(unitCreated)
-  local tDisposition = unitCreated:GetDispositionTo(GameLib.GetPlayerUnit())
+  -- Because some of the mounts have names similar to rare mobs, we will not be tracking them.
+  if unitCreated:GetType() == "Mount" then return end
+  
   local strUnitName = trim(unitCreated:GetName())
 
   if unitCreated:IsValid() and not unitCreated:IsDead() and not unitCreated:IsACharacter() and 

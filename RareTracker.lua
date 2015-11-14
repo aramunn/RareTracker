@@ -59,6 +59,7 @@ function RareTracker:new(o)
 
 	self.nMajorVersion = 2
 	self.nMinorVersion = 0
+	self.nPatchVersion = 4
 	self.bNewRares = false
 	self.arRareMobs = {}
 	
@@ -382,6 +383,7 @@ function RareTracker:OnSave(eLevel)
   tSavedData.trackMasterEnabled = self.bTrackMasterEnabled
   tSavedData.savedMinorVersion = self.nMinorVersion
   tSavedData.savedMajorVersion = self.nMajorVersion
+  tSavedData.savedPatchVersion = self.nPatchVersion
   tSavedData.tLocations = self.tLocations
 
   return tSavedData

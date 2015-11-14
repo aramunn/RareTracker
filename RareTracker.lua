@@ -519,6 +519,32 @@ function RareTracker:OnAutoCloseTimer()
   end
 end
 
+-- Returns true when the unit is being tracked as a standard unit.
+-- When this is not a standard unit, then we will return false instead.
+-- The function will ignore any NPC characters as well as mounts.
+function RareTracker:TrackedStandard(unit)
+  if unit:GetType() ~= "NonPlayer" then return false end
+  
+  local strName = trim(unit:GetName())
+  local tDisposition = unit:GetDispositionTo(GameLib.GetPlayerUnit())
+  local bTrackable = true
+  
+  -- Determine whether the provided unit needs to be tracked:
+  --  1. Unit needs to be valid
+  --  2. Unit needs to be alive
+  --  3. Unit cannot be a character
+  --  4. Unit must meet minimum level requirements
+  --  5. Unit needs to be in our tracking table.
+  --  6. Unit need to be Neutral or Hostile
+  bTrackable = bTrackable and unit:IsValid() 
+  bTrackable = bTrackable and not unit:IsDead() 
+  bTrackable = bTrackable and not unit:IsACharacter()
+  bTrackable = bTrackable and ((unit:GetLevel() or self.minLevel) >= self.minLevel) 
+  bTrackable = bTrackable and table.find(strName, self.arRareNames)
+  bTrackable = bTrackable and (tDisposition == Unit.CodeEnumDisposition.Hostile or tDisposition == Unit.CodeEnumDisposition.Neutral)
+  
+  return bTrackable
+end
 -----------------------------------------------------------------------------------------------
 -- OnUnitCreated
 -- 
@@ -532,11 +558,9 @@ function RareTracker:OnUnitCreated(unitCreated)
   
   local strUnitName = trim(unitCreated:GetName())
 
-  if unitCreated:IsValid() and not unitCreated:IsDead() and not unitCreated:IsACharacter() and 
-     ((unitCreated:GetLevel() or self.minLevel) >= self.minLevel) and
-     (table.find(strUnitName, self.arRareNames) or table.find(strUnitName, self.arCustomNames)) then
-    
+  if(self:TrackedStandard(unitCreated) or table.find(strUnitName, self.arCustomNames)) then
     local unitRare = self.arRareMobs[unitCreated:GetName()]
+    
     if not unitRare then
       self:AddTrackedRare(unitCreated)
 

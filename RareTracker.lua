@@ -59,6 +59,7 @@ function RareTracker:new(o)
 	self.nMinorVersion = 0
 	self.bNewRares = false
 	self.arRareMobs = {}
+	self.arIgnoredTypes = { "Mount", "Scanner" }
 	
 	local strCancelLocale = Apollo.GetString("CRB_Cancel");
   	
@@ -520,6 +521,17 @@ function RareTracker:OnAutoCloseTimer()
 end
 
 -----------------------------------------------------------------------------------------------
+-- TrackableUnit
+--
+-- Determines whether the unit is to be tracked by the Addon or not.
+-- When the unit is considered valid, alive, not a player and the level matches
+-- the minimum level for tracking, then we consider this a trackable unit.
+-----------------------------------------------------------------------------------------------
+function RareTracker:TrackeableUnit(unit)
+  return unit:IsValid() and not unit:IsDead() and not unit:IsACharacter() and ((unit:GetLevel() or self.minLevel) >= self.minLevel)
+end
+
+-----------------------------------------------------------------------------------------------
 -- OnUnitCreated
 -- 
 -- Callback by the client whenever a new unit is created into the world.
@@ -527,16 +539,15 @@ end
 -- window when we have to.
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnUnitCreated(unitCreated)
-  -- Because some of the mounts have names similar to rare mobs, we will not be tracking them.
-  if unitCreated:GetType() == "Mount" then return end
-  
+  -- We're going to ignore specific types for tracking.
+  -- They are defined in the arIgnoredTypes variable.
+  if table.find(unitCreated:GetType(), self.arIgnoredTypes) then return end
+
   local strUnitName = trim(unitCreated:GetName())
 
-  if unitCreated:IsValid() and not unitCreated:IsDead() and not unitCreated:IsACharacter() and 
-     ((unitCreated:GetLevel() or self.minLevel) >= self.minLevel) and
-     (table.find(strUnitName, self.arRareNames) or table.find(strUnitName, self.arCustomNames)) then
-    
+  if self:TrackeableUnit(unitCreated) and (table.find(strUnitName, self.arRareNames) or table.find(strUnitName, self.arCustomNames)) then
     local unitRare = self.arRareMobs[unitCreated:GetName()]
+
     if not unitRare then
       self:AddTrackedRare(unitCreated)
 
@@ -552,7 +563,7 @@ function RareTracker:OnUnitCreated(unitCreated)
           end
         end
       end
-      
+
       self.wndMain:Invoke()
     elseif unitRare.inactive then
       -- The mob was destroyed but has been found again

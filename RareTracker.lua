@@ -62,7 +62,7 @@ function RareTracker:new(o)
 	self.nPatchVersion = 4
 	self.bNewRares = false
 	self.arRareMobs = {}
-	self.arIgnoredTypes = { "Mount", "Scanner" }
+	self.arIgnoredTypes = { "Mount", "Scanner", "Simple" }
 
 	local strCancelLocale = Apollo.GetString("CRB_Cancel");
   	
@@ -568,6 +568,7 @@ function RareTracker:OnUnitCreated(unitCreated)
         end
       end
 
+      Print("unitType: " .. unitCreated:GetType())
       self.wndMain:Invoke()
     elseif unitRare.inactive then
       -- The mob was destroyed but has been found again

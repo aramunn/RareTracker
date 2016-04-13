@@ -52,15 +52,18 @@ end
 -----------------------------------------------------------------------------------------------
 function RareTracker:new(o)
 	o = o or {}
+
 	setmetatable(o, self)
+
 	self.__index = self
 
 	self.nMajorVersion = 2
 	self.nMinorVersion = 0
+	self.nPatchVersion = 4
 	self.bNewRares = false
 	self.arRareMobs = {}
 	self.arIgnoredTypes = { "Mount", "Scanner" }
-	
+
 	local strCancelLocale = Apollo.GetString("CRB_Cancel");
   	
   if strCancelLocale == "Cancel" then
@@ -381,6 +384,7 @@ function RareTracker:OnSave(eLevel)
   tSavedData.trackMasterEnabled = self.bTrackMasterEnabled
   tSavedData.savedMinorVersion = self.nMinorVersion
   tSavedData.savedMajorVersion = self.nMajorVersion
+  tSavedData.savedPatchVersion = self.nPatchVersion
   tSavedData.tLocations = self.tLocations
 
   return tSavedData

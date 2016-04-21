@@ -580,7 +580,6 @@ function RareTracker:OnUnitCreated(unitCreated)
         end
       end
 
-      Print("unitType: " .. unitCreated:GetType())
       self.wndMain:Invoke()
     elseif unitRare.inactive then
       -- The mob was destroyed but has been found again

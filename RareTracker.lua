@@ -15,38 +15,108 @@ local activeTextColor = ApolloColor.new("xkcdAppleGreen")
 local inactiveTextColor = ApolloColor.new("xkcdCherryRed")
 local customUnitColor = ApolloColor.new("xkcdBloodOrange")
 local karrAchievements = {
-    ["I Like it Rare: Northren Wastes"] = true,
-    ["I Like it Rare: Crimson Badlands"] = true,
-    ["I Like it Rare: Containment Facility R-12"] = true,
-    ["I Like it Rare: Farside"] = true,
-    ["I Like it Rare: Wilderrun"] = true,
-    ["I Like it Rare: Ellevar"] = true,
-    ["I Like it Rare: Deradune"] = true,
-    ["I Like it Rare: Malgrave"] = true,
-    ["I Like it Rare: Auroria"] = true,
-    ["I Like it Rare: Southern Grimvault"] = true,
-    ["I Like it Rare: Western Grimvault"] = true,
-    ["I Like it Rare: Blighthaven"] = true,
-    ["I Like it Rare: The Defile"] = true,
-    ["I Like it Rare: Star-Comm Basin"] = true,
-    ["I Like it Rare: Arcterra"] = true,
-    ["Apex Predator"] = true,
-    ["Artic Extinction"] = true,
-    ["Exotic Executioner: Whitevale"] = true,
-    ["Exotic Executioner: Farside"] = true,
-    ["Exotic Executioner: Wilderrun"] = true,
-    ["Exotic Executioner: Malgrave"] = true,
-    ["Exotic Executioner: Southern Grimvault"] = true,
-    ["Exotic Executioner: Star-Comm Basin"] = true,
-    ["Exotic Executioner: Alizar"] = true,
-    ["Exotic Executioner: Olyssia"] = true,
-    ["Exotic Executioner: Isigrol"] = true,
-    ["Exotic Executioner: Halon Ring"] = true,
-    ["Exotic Executioner: Western Grimvault"] = true,
-    ["Exotic Executioner: Blighthaven"] = true,
-    ["Exotic Executioner: The Defile"] = true,
-    ["Exotic Executioner: Arcterra"] = true,
-    ["World Boss: Big Boss Hunter"] = true
+    ["EN"] = {
+        ["I Like it Rare: Northren Wastes"] = true,
+        ["I Like it Rare: Crimson Badlands"] = true,
+        ["I Like it Rare: Containment Facility R-12"] = true,
+        ["I Like it Rare: Farside"] = true,
+        ["I Like it Rare: Wilderrun"] = true,
+        ["I Like it Rare: Ellevar"] = true,
+        ["I Like it Rare: Deradune"] = true,
+        ["I Like it Rare: Malgrave"] = true,
+        ["I Like it Rare: Auroria"] = true,
+        ["I Like it Rare: Southern Grimvault"] = true,
+        ["I Like it Rare: Western Grimvault"] = true,
+        ["I Like it Rare: Blighthaven"] = true,
+        ["I Like it Rare: The Defile"] = true,
+        ["I Like it Rare: Star-Comm Basin"] = true,
+        ["I Like it Rare: Arcterra"] = true,
+        ["Apex Predator"] = true,
+        ["Artic Extinction"] = true,
+        ["Exotic Executioner: Whitevale"] = true,
+        ["Exotic Executioner: Farside"] = true,
+        ["Exotic Executioner: Wilderrun"] = true,
+        ["Exotic Executioner: Malgrave"] = true,
+        ["Exotic Executioner: Southern Grimvault"] = true,
+        ["Exotic Executioner: Star-Comm Basin"] = true,
+        ["Exotic Executioner: Alizar"] = true,
+        ["Exotic Executioner: Olyssia"] = true,
+        ["Exotic Executioner: Isigrol"] = true,
+        ["Exotic Executioner: Halon Ring"] = true,
+        ["Exotic Executioner: Western Grimvault"] = true,
+        ["Exotic Executioner: Blighthaven"] = true,
+        ["Exotic Executioner: The Defile"] = true,
+        ["Exotic Executioner: Arcterra"] = true,
+        ["World Boss: Big Boss Hunter"] = true
+    },
+    ["DE"] = {
+        ["Die Rote Liste: Nördliches Ödland"] = true,
+        ["Die Rote Liste: Blutrotes Hinterland"] = true,
+        ["Die Rote Liste: Isolationsanlage R-12"] = true,
+        ["Die Rote Liste: Fernseits"] = true,
+        ["Die Rote Liste: Wildlauf"] = true,
+        ["Die Rote Liste: Ellevar"] = true,
+        ["Die Rote Liste: Deradune"] = true,
+        ["Die Rote Liste: Jochgrab"] = true,
+        ["Die Rote Liste: Auroria"] = true,
+        ["Die Rote Liste: Südliche Gramkammer"] = true,
+        ["Die Rote Liste: Westliche Gramkammer"] = true,
+        ["Die Rote Liste: Fäulnisrefugium"] = true,
+        ["Die Rote Liste: Die Verderbnis"] = true,
+        ["Die Rote Liste: StarKom-Becken"] = true,
+        ["Die Rote Liste: Arkterra"] = true,
+        ["Spitze der Nahrungspyramide"] = true,
+        ["Arktische Ausrottung"] = true,
+        ["Exotenschreck: Weißtal"] = true,
+        ["Exotenschreck: Fernseits"] = true,
+        ["Exotenschreck: Wildlauf"] = true,
+        ["Exotenschreck: Jochgrab"] = true,
+        ["Exotenschreck: Südliche Gramkammer"] = true,
+        ["Exotenschreck: StarKom-Becken"] = true,
+        ["Exotenschreck: Alizar"] = true,
+        ["Exotenschreck: Olyssia"] = true,
+        ["Exotenschreck: Isigrol"] = true,
+        ["Exotenschreck: Halonring"] = true,
+        ["Exotenschreck: Westliche Gramkammer"] = true,
+        ["Exotenschreck: Fäulnisrefugium"] = true,
+        ["Exotenschreck: Die Verderbnis"] = true,
+        ["Exotenschreck: Arkterra"] = true,
+        ["Weltboss: Großbossjäger"] = true
+    },
+    ["FR"] = {
+        ["Espèces en voie de disparition : Sombreflore"] = true,
+        ["Espèces en voie de disparition : Blutrotes Hinterland"] = true,
+        ["Espèces en voie de disparition : Isolationsanlage R-12"] = true,
+        ["Espèces en voie de disparition : Fernseits"] = true,
+        ["Espèces en voie de disparition : Wildlauf"] = true,
+        ["Espèces en voie de disparition : Ellevar"] = true,
+        ["Espèces en voie de disparition : Déradune"] = true,
+        ["Espèces en voie de disparition : Maltombe"] = true,
+        ["Espèces en voie de disparition : Auroria"] = true,
+        ["Espèces en voie de disparition : Mornegeôle sud"] = true,
+        ["Espèces en voie de disparition : Mornegeôle ouest"] = true,
+        ["Espèces en voie de disparition : Refuge Impur"] = true,
+        ["Espèces en voie de disparition: Infection"] = true,
+        ["Espèces en voie de disparition: Basin de Star-Comm"] = true,
+        ["Espèces en voie de disparition: Arcterra"] = true,
+        ["Prédateur ultime"] = true,
+        ["Extinction arctique"] = true,
+        ["Borreau exotique: Valblanc"] = true,
+        ["Borreau exotique: Outre-horizon"] = true,
+        ["Borreau exotique: Sombreflore"] = true,
+        ["Borreau exotique: Maltombe"] = true,
+        ["Borreau exotique: Mornegeôle sud"] = true,
+        ["Borreau exotique: Bassin de Star-Comm"] = true,
+        ["Borreau exotique: Alizar"] = true,
+        ["Borreau exotique: Olyssia"] = true,
+        ["Borreau exotique: Isigrol"] = true,
+        ["Borreau exotique: Annequ d'Halon"] = true,
+        ["Borreau exotique: Mornegeôle ouest"] = true,
+        ["Borreau exotique: Refuge Impur"] = true,
+        ["Borreau exotique: Infection"] = true,
+        ["Borreau exotique: Arcterra"] = true,
+        ["Boss : Ke Saint des chasseurs"] = true
+    }
 }
 -----------------------------------------------------------------------------------------------
 -- Helper Functions
@@ -99,6 +169,18 @@ function RareTracker:new(o)
     self.arIgnoredTypes = { "Mount", "Scanner", "Simple" }
     self.wndSelectedRare = nil
     self.arDefaultRareNames = {}
+
+    local strCancelLocale = Apollo.GetString("CRB_Cancel")
+
+    if strCancelLocale == "Cancel" then
+        self.strLocale = "EN"
+    elseif strCancelLocale == "Annuler" then
+        self.strLocale = "FR"
+    elseif strCancelLocale == "Abbrechen" then
+        self.strLocale = "DE"
+    else
+        self.strLocale = "EN"
+    end
 
     return o
 end
@@ -807,7 +889,7 @@ function RareTracker:InitRares()
     local arrAchievements = AchievementsLib.GetAchievements()
 
     for _, achievement in pairs(arrAchievements) do
-        if karrAchievements[achievement:GetName()] then
+        if karrAchievements[self.strLocale][achievement:GetName()] then
             for _,entry in pairs(achievement:GetChecklistItems()) do
                 table.insert(self.arRareNames, entry.strChecklistEntry)
                 self.achievementEntries[entry.strChecklistEntry] = entry.bIsComplete

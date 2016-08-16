@@ -14,7 +14,40 @@ local selectedTextColor = ApolloColor.new("UI_BtnTextHoloPressedFlyby")
 local activeTextColor = ApolloColor.new("xkcdAppleGreen")
 local inactiveTextColor = ApolloColor.new("xkcdCherryRed")
 local customUnitColor = ApolloColor.new("xkcdBloodOrange")
-
+local karrAchievements = {
+    ["I Like it Rare: Northren Wastes"] = true,
+    ["I Like it Rare: Crimson Badlands"] = true,
+    ["I Like it Rare: Containment Facility R-12"] = true,
+    ["I Like it Rare: Farside"] = true,
+    ["I Like it Rare: Wilderrun"] = true,
+    ["I Like it Rare: Ellevar"] = true,
+    ["I Like it Rare: Deradune"] = true,
+    ["I Like it Rare: Malgrave"] = true,
+    ["I Like it Rare: Auroria"] = true,
+    ["I Like it Rare: Southern Grimvault"] = true,
+    ["I Like it Rare: Western Grimvault"] = true,
+    ["I Like it Rare: Blighthaven"] = true,
+    ["I Like it Rare: The Defile"] = true,
+    ["I Like it Rare: Star-Comm Basin"] = true,
+    ["I Like it Rare: Arcterra"] = true,
+    ["Apex Predator"] = true,
+    ["Artic Extinction"] = true,
+    ["Exotic Executioner: Whitevale"] = true,
+    ["Exotic Executioner: Farside"] = true,
+    ["Exotic Executioner: Wilderrun"] = true,
+    ["Exotic Executioner: Malgrave"] = true,
+    ["Exotic Executioner: Southern Grimvault"] = true,
+    ["Exotic Executioner: Star-Comm Basin"] = true,
+    ["Exotic Executioner: Alizar"] = true,
+    ["Exotic Executioner: Olyssia"] = true,
+    ["Exotic Executioner: Isigrol"] = true,
+    ["Exotic Executioner: Halon Ring"] = true,
+    ["Exotic Executioner: Western Grimvault"] = true,
+    ["Exotic Executioner: Blighthaven"] = true,
+    ["Exotic Executioner: The Defile"] = true,
+    ["Exotic Executioner: Arcterra"] = true,
+    ["World Boss: Big Boss Hunter"] = true
+}
 -----------------------------------------------------------------------------------------------
 -- Helper Functions
 -----------------------------------------------------------------------------------------------
@@ -53,7 +86,7 @@ end
 -- Initialization
 -----------------------------------------------------------------------------------------------
 function RareTracker:new(o)
-  o = o or {}
+    o = o or {}
 
 	setmetatable(o, self)
 
@@ -64,150 +97,10 @@ function RareTracker:new(o)
 	self.bNewRares = false
 	self.arRareMobs = {}
 	self.arIgnoredTypes = { "Mount", "Scanner", "Simple" }
-  self.wndSelectedRare = nil
-
-	local strCancelLocale = Apollo.GetString("CRB_Cancel");
-  	
-  if strCancelLocale == "Cancel" then
-    self.arDefaultRareNames = {
-      "Nomjin","Frostshard","Prodigy","Beastmaster Xix","Iiksy","Shadowfall","Leatherface","Stonepile","Stanch",
-      "Galegut","Gnawer", "Deadbough","Barebones","Wormwood the Wraithmaker","Wormwood Acolyte",
-      "Ashwin the Stormcrested","Claymore XT-9","AG5 Blitzbuster","Nym Maiden of Mercy", "Asteria","Acacia","Atethys",
-      "Mikolai the Malevolent","The Shadow Queen","XL-51 Goliath","Queen Bizzelt","Captain Fripeti",
-      "Groundswell Guardsman", "RG3 Blitzbuster","Brigadier Bellza","Black Besieger","Exterminator Cryvex",
-      "Veshra the Eye of the Storm","Slopper","Gravek the Swale-Striker","Veldrok the Vindicator", "Moreg the Mauler",
-      "Zersa the Betrothed","Kalifa","Cromlech the Kilnborn","Soul of the Silva","Meldrid the Decrepit","Blisterbane",
-      "Squall","Flamesurge","Rumble", "Doctor Rotthrall","Kryne the Tidebreaker","Quin Quickdraw","Andara the Seer",
-      "Crog the Smasher","ER-7 Explorer","AX-12 Defender","Torgal the Devastator","Scabclaw", "Gorax the Putrid",
-      "Old Scrappy","Dreadbone","Guardian Xeltos","Guardian Zelkix","Augmented Ragemaster","Flintrock","Gorignak",
-      "Granitefist","Dreich","Beelzebug","Whitefang", "Detritus","Lifegrazer","The Pink Pumera","The Queen","Blinky",
-      "Drifter","The Lobotomizer","Abyss","Deadpaws","Alpha Guard One","Alpha Guard Two","Strainblade","Vorgrim",
-      "The Vultch","Deathgrazer","Purple Peep Eater","The Ravagist","Amorphomorph","King Grimrock","Scrabbles",
-      "Sgt. Garog","Excargo","Gorganoth Prime","The Floater","Weapon 24", "Ghostfin","Torrent","Whirlwind","Dreadmorel",
-      "Regulator 11","Auxiliary Probe","Sarod the Senseless","Aeacus","Silverhorn","Voresk Venomgill",
-      "The Terror of Bloodstone", "Zakan the Necroshaman","Wrath of Niwha","Felidax","Terminus Rex",
-      "Gavwyn the Verdant Defender","Steel Jaw","Arianna Wildgrass","Arianna's Sentry","Arianna's Assassin",
-      "Subject: Rho","The Endless Hunger","Flamekin","Nakaz the Deadlord","Hotshot Braz","Bloodtail","Blightbeak",
-      "Deathpaw","Grudder","Quiggles","King Cruelclaw","Queen Kizzek", "Grovekeeper Fellia","Razorclaw",
-      "Chief Blackheart","Rondo","Rondo's Squad","XT-9 Alpha","Crystalback","Rashanna the Soul Drinker",
-      "The Embermaster","Rotfang","Spellmaster Verwyn", "Subject V - Tempest","Subject J - Fiend","Subject K - Brute",
-      "KE-27 Sentinel","KE-28 Energizer","Subject Tau","Grinder","Bugwit","Icefang","Frostbite",
-      "Grellus the Blight Queen", "Torvex the Crystal Titan","K9 Destroyer","Stormshell","FR2 Blitzer","Permafrost",
-      "Drud the Demented","Frosty the Snowtail","Skorga the Frigid","Warlord Nagvox","Shellshock", "Blubbergut",
-      "Frozenclaw","Stonegut","Savageclaw","Grug the Executioner","Blightfang","Basher Grogek","Flame-Binder Sorvel",
-      "Flame-Binder Trovin","Queen Tizzet","Dominator", "Infinimaw","Bloodmane","\"Hotshot\" Braz","The Bumbler",
-      "Aeroth the Sentinel","Wretch the Impure","Gnarly Hookfoot","Radical Hookfoot","Dramatic Skug Queen","Soultaker",
-		  "Bogus Fraz","Gnashing Cankertube Garr","The Stump","Fool's Gold","NG Protector One","Marmota","Ruga the Ageless",
-      "Lightback","Grace","Pusbelly","Randok","Tessa","Flood", "Flametongue","Slab","Final Flight","The Enlightened",
-      "Growth","Proliferator","Tainted Drone","Tainted Direweb","Deathbite","The Outsider","SCS Adjutant",
-      "Tharge the Waterseeker","Lazy Lenny",
-
-      -- Arcterra
-      "Iceberg","Snowblind","Frosthide","Korgar the Ossified","Winter","Windlash",
-
-      -- Exotic Executioner Achievement
-      "Bot Pulverizer LD-17", "Tuskar the Shatterhorn", "Glacierjaw", "Frozenclaw", "Sleethide", "Soragh Silvertooth",
-      "X426 Augmentor Apex", "Maw the Junglestalker", "Vitala the Overgrown", "Velum the Overgrown",
-      "Greva the Bone Collector", "Viceclaw the Skinlasher", "Othrum the Windlasher", "Magthar the Meteorborn",
-      "Pharos the Immolator", "Cz-5 Exobreaker", "Nauticus the Abyssal", "Cerebros", "Welskar the Wild",
-      "Ersa the Soulrender", "Dara the Bladekeeper", "Kalsha the Life-Sworn", "Kelvia the Slavemaster",
-      "Backwash the Brackish", "The Primal Destroyer", "Vileblossom the Putrid", "Malfeast the Unclean",
-      "Grimtangle the Weaver", "Tecton the Immovable", "Demonpaw", "Skunkh the Penalizer", "Snerf the Bloodnose",
-      "Alex \"Stabby\" Boyer", "Skawren the Gale Witch", "Sun-Holder", "Ragestone", "Bloodtusk", "Bloodpaw",
-      "Worg the Mind Corruptor", "Kedrik the Crazed", "Verok the Insane", "X21 Goliath", "D23 Titan", "Tremgut",
-      "Zeke the Anguished", "Devan the Disturbed", "Crispin the Tormented", "Malmedical Mechanica", "Pyropaw the Smokey",
-      "Aranea", "Shatterback", "Tidebreaker Sorlek", "Spinebreaker Brukah", "Frubb the Grotesque", "Grodga the Wicked",
-      "Freezia", "Freygoth", "Frethalem", "Fregad",
-
-      -- Apex Lifeforms
-      "Abominus", "Skalgoth the Coldhearted", "Uth Kundar", "Nashdul the Unchained", "Ghost", "Morthun the Shieldbreaker",
-      "Frost-Keeper Arcanist", "Malfunctioning Unit \"GL-4C13R\""
-    }
-	elseif strCancelLocale == "Annuler" then
-	  self.arDefaultRareNames = {
-      "Nomjin","Éclat de givre","Prodige","Dompteur Xix","Iiksy","Ombrechute","Leatherface","Tas de pierres",
-      "Endigueur","Souffletripe","Rongeur", "Mortebranche","Ossanu","Verbois le Courrouceur","Acolytes verbois",
-      "Ashwin le Crêtetempête","Claymore XT-9","AG5 Blitzbuster","Nym, vierge de la pitié", "Asteria","Acacia",
-      "Atethys","Mikolai le malfaisant","La reine des ombres","Goliath XL-51","Reine Bizzbizze","Captaine Fripeti",
-      "Garde du Tellurixe", "Bombardeur RG3","Brigadier Bellza","Assiégeant noir","Exterminateur Cryvex",
-      "Veshra l'œil du cyclone","Renverseur","Gravek le Frappefosse","Veldrok le Vengeur", "Moreg le Déchiqueteur",
-      "Zersa la Promise","Kalifa","Cromlech l'Enfourné","Âme sylvaine","Meldrid la Décatie","Cloquepoil","Squall",
-      "Retour de flamme","Rumble", "Docteur Vilserf","Kryne le Brisemarée","Quin fine gâchette","Andara le Devin",
-      "Crog le Fracasseur","Explorateur ER-7","Défenseur AX-12","Torgal le Dévasteur","Corrugriffe",
-      "Gorax le Putride","Vieux tas de ferraille","Épouvantos","Gardien Xeltos","Gardien Zelkix","Maîtrerage augmenté",
-      "Silex","Gorignak","Poing de granit","Dreich","Bourdard","Croblanc", "Détritus","Viverelle",
-      "The Pink Pumera","La reine","Cligneur","Flotteur","Le Lobotomiseur","Abîme","Donnemorts","Garde Alpha 1",
-      "Garde Alpha 2","Souille-lame","Vorgrim", "Le Vautour","Morterelle","Purple Peep Eater","Le Ravageur",
-      "Amorphomorphe","Roi Sinistreroche","Scrabbles","Sergent Garog","Excargo","Primo Gorganoth","Le Flotteur",
-      "Arme 24", "Spectraileron","Torrent","Tourbillon","Effroimorille","Régulateur 11","Sonde auxiliaire",
-      "Sarod l'Insensé","Aeacus","Cornargent","Voresk Branchivenin","La Terreur de Rochesang", "Zakan le Nécrochaman",
-      "Courroux du Niwha","Felidax","Terminus Rex","Gavwyn le Défenseur verdoyant","Mâchoire d'acier",
-      "Arianna Herbefolle","Sentinelle d'Arianna","Assassin d'Arianna", "Sujets : Rho","La faim sans fin",
-      "Soucheflamme","Nakaz le Seigneur mort","Hotshot Braz","Sanguifouet","Rouillebec","Griffemort","Grapace",
-      "Grouillis","Roi Lacérace","Reine Kizzek", "Garde-bosquet Fellia","Acèregriffe","Chef de Noircœur","Rondo",
-      "Équipe de Rondo","Alpha XT-9","Marbredos","Rashanna la Buveuse d'âmes","Le Maître des braises","Putrecroc",
-      "Maître des sorts Verwyn", "Sujet V : tempête","Sujet J : démon","Sujet K : brute","Sentinelle KE-27",
-      "Source d'énergie KE-28","Sujet Tau","Broyeur","Bugwit","Croc-de-glace","Moglace",
-      "Grellus, la reine de la Rouille", "Torvex le Titan de cristal","Destructeur K9","Coquetempête","Pilonneur FR2",
-      "Permafrost","Drud le Dément","Frosty the Snowtail","Skorga le Glacé","Seigneur de guerre Nagvox","Shellshock",
-      "Tripesuif","Griffegel","Tripes de pierre","Brutegriffe","Grug le bourreau","Rouillecroc","Dérouilleur Grogek",
-      "Attache-Flamme Sorvel","Attache-Flamme Trovin","Reine Tizzet","Dominateur", "Mâchenéant","Sanguicrin",
-      "Cador Braz","L'Empoté","Aeroth la Sentinelle","Wretch l'Impur","Croche-pattes ratatiné","Croche-pattes radical",
-      "Reine skug dramatique","Mange-âme", "Faux Friz","Garr chancretube grinçant","La Souche","L'or du fou",
-      "NG Premier Protecteur","Marmota","Ruga l'Éternel","Allègedos","Gracieux","Suppustule","Randok","Tessa",
-      "Inondation", "Langueflamme","Bloc de pierre","Vol final","L'Illuminé","Croissance","Proliférateur",
-      "Frelon corrompu","Sinistoile impure","Crofuneste","L'Étranger","Instructuer SSC","Tharge le Sourcier",
-      "Lenny le Fainéant",
-
-      -- Arcterra
-      "Iceberg","Neige aveuglante","Givrepeau","Korgar l'Ossifié","Hiver","Perce-vent"
-    }
-  elseif strCancelLocale == "Abbrechen" then
-    self.arDefaultRareNames = {
-      "Nomjin","Frostscherbe","Wunderkind","Bestienmeisterin Xix","Iiksy","Schattenfall","Leatherface","Steinhaufen",
-      "Stehmann","Orkanbauch","Kauer", "Totzweig","Blankknochen","Wurmholz der Geistermacher","Wurmholz-Akolyth",
-      "Ashwin der Sturmbedeckte","Claymore XT-9","Blitzjäger AG5","Nym Jungfrau der Gnade", "Asteria","Acacia",
-      "Atethys","Mikolai der Grausame","Die Schattenkönigin","XL-51 Goliath","Königin Bizzelt","Captain Fripeti",
-      "Schwellgrund-Wachmann", "RG3-Blitzjäger","Brigadekommandeur Bellza","Schwarzer Belagerer","Exterminator Cryvex",
-      "Veshra, das Auge des Sturms","Schwapper","Gravek der Muldenschläger","Veldrok der Verteidiger",
-      "Moreg der Malmer","Zersa die Verlobte","Kalifa","Cromlech der Brennofengeborene","Seele der Silva",
-      "Meldrid die Altersschwache","Blasenfluch","Squall","Flammenwoge","Rumble", "Doktor Faulsklave",
-      "Kryne der Wellenbrecher","Quin Flinkhand","Andara die Seherin","Crog der Zertrümmerer","ER-7 Kundschafter",
-      "AX-12 Verteidiger","Torgal der Verwüster","Schorfklaue", "Gorax der Verweser","Alte Rumpelkiste",
-      "Schreckensknochen","Wächter Xeltos","Wächter Zelkix","Augmentierter Zornmeister","Feuerstein","Gorignak",
-      "Granitfaust","Dreich","Summuel","Weißzahn", "Geröll","Lebensgraser","The Pink Pumera","Die Königin","Blinzli",
-      "Gammler","Der Lobotomisierer","Abgrund","Totepfoten","Alphawache Eins","Alphawache Zwei","Transmutationsklinge",
-      "Vorgrimm", "Der Vultch","Todgraser","Purple Peep Eater","Der Verwüstologe","Amorphomorph","König Grimmfels",
-      "Scrabbles","Sgt. Garog","Exfracht","Gorganoth der Erste","Der Schweber","Waffe 24", "Geistflosse","Strömung",
-      "Wirbelwind","Furchtmorchel","Regulator 11","Hilfssonde","Sarod der Sinnlose","Aeacus","Silberhorn",
-      "Voresk Giftkiemen","Der Schrecken von Blutstein", "Zakan der Nekroschamane","Zorn von Niwha","Felidax",
-      "Terminus Rex","Gavwyn der Grüne Verteidiger","Stahlkiefer","Arianna Wildgras","Ariannas Wachposten",
-      "Ariannas Assassinin", "Subjekt: Rho","Der unstillbare Hunger","Flammensippe","Nakaz der Totenherr",
-      "Hotshot Braz","Blutschwanz","Faulschnabel","Todespfote","Grudder","Kringel","König Gräuelklaue","Königin Kizzek",
-      "Hainhüterin Fellia","Scharfkralle","Häuptling Schwarzherz","Rondo","Rondos Trupp","XT-9-Alpha","Kristallrücken",
-      "Rashanna die Seelentrinkerin","Der Glutmeister","Faulzahn","Spruchmeister Verwyn", "Subjekt V – Sturm",
-      "Subjekt J – Scheusal","Subjekt K – Widerling","Wache KE-27","Auflader KE-28","Objekt: Tau","Schleifer",
-      "Kleinsinn","Eiszahn","Frostbiss","Grellus die Fäulniskönigin", "Torvex der Kristalltitan","K9 Zerstörer",
-      "Sturmpanzer","FR2 Blitzer","Permafrost","Drud der Verrückte","Frosty the Snowtail","Skorga der Frostige",
-      "Kriegsherr Nagvox","Shellshock", "Speckbauch","Frostklaue","Steingedärm","Wildklaue","Grug der Scharfrichter",
-      "Faulzahn","Spalter Grogek","Flammenbinder Sorvel","Flammenbinder Trovin","Königin Tizzet","Dominator",
-      "Endlosschlund","Blutmähne","\"„Teufelskerl“\" Braz","Der Summser","Aeroth der Wachhabende","Teufel der Unreine",
-      "Knorriger Hakenfuß","Radikaler Hakenfuß","Dramatische Skugkönigin","Seelennehmer", "Bogus Fraz",
-      "Knirschender Wucher-Garr","Der Stumpf","Narrengold","NG-Protektor Eins","Marmota","Ruga der Alterslose",
-      "Leichtschulter","Liebreiz","Eiterbauch","Randok","Tessa","Flut", "Flammenzunge","Steinplatte","Finalflug",
-      "Der Erleuchtete","Wuchs","Vermehrer","Verdorbene Drohne","Finsternetz-Verdorbener","Todesbiss",
-      "Der Außenseiter","SKS-Adjutant","Wassersucher Tharge","Fauler Lenny",
-
-      -- Arcterra
-      "Eisberg","Schneeblind","Frostbalg","Korgar der Verknöcherte","Winter","Windpeitsche"
-    }
-  else
+    self.wndSelectedRare = nil
     self.arDefaultRareNames = {}
-  end
 
-	table.sort(self.arDefaultRareNames)
-
-  return o
+    return o
 end
 
 function RareTracker:Init()
@@ -215,7 +108,7 @@ function RareTracker:Init()
 	local strConfigureButtonText = "RareTracker"
 	local tDependencies = {}
 
-  Apollo.RegisterAddon(self, bHasConfigureFunction, strConfigureButtonText, tDependencies)
+    Apollo.RegisterAddon(self, bHasConfigureFunction, strConfigureButtonText, tDependencies)
 end
  
 -----------------------------------------------------------------------------------------------
@@ -236,36 +129,38 @@ end
 -- event. In this callback we build up the actual form objects.
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnDocLoaded()
-	if self.xmlDoc ~= nil and self.xmlDoc:IsLoaded() then
-    self.wndMain = Apollo.LoadForm(self.xmlDoc, "RareTrackerForm", nil, self)
+    if self.xmlDoc ~= nil and self.xmlDoc:IsLoaded() then
+        self.wndMain = Apollo.LoadForm(self.xmlDoc, "RareTrackerForm", nil, self)
     
-	  if self.wndMain == nil then
-		  Apollo.AddAddonErrorText(self, "Could not load the main window for some reason.")
-		  return
-	  end
+        if self.wndMain == nil then
+            Apollo.AddAddonErrorText(self, "Could not load the main window for some reason.")
+            return
+        end
 
-  	self.trackedRaresWindow = self.wndMain:FindChild("TrackedRaresList")
-    self.wndMain:Show(false, true)
-    self:LoadPosition()
+        self.trackedRaresWindow = self.wndMain:FindChild("TrackedRaresList")
+        self.wndMain:Show(false, true)
+        self:LoadPosition()
 
-  	Apollo.RegisterSlashCommand("raretracker", "OnSlashCommand", self)
-    Apollo.RegisterSlashCommand("rt", "OnSlashCommand", self)
-    Apollo.RegisterEventHandler("UnitCreated", "OnUnitCreated", self)
-    Apollo.RegisterEventHandler("UnitDestroyed", "OnUnitDestroyed", self)
-    Apollo.RegisterEventHandler("WindowManagementReady", "OnWindowManagementReady", self)
+        Apollo.RegisterSlashCommand("raretracker", "OnSlashCommand", self)
+        Apollo.RegisterSlashCommand("rt", "OnSlashCommand", self)
+        Apollo.RegisterEventHandler("UnitCreated", "OnUnitCreated", self)
+        Apollo.RegisterEventHandler("UnitDestroyed", "OnUnitDestroyed", self)
+        Apollo.RegisterEventHandler("WindowManagementReady", "OnWindowManagementReady", self)
 
-    self.timer = ApolloTimer.Create(1/60, true, "OnTimer", self)
-    self.rotationTimer = ApolloTimer.Create(1/5, true, "OnTimer", self)
+        self.timer = ApolloTimer.Create(1/60, true, "OnTimer", self)
+        self.rotationTimer = ApolloTimer.Create(1/5, true, "OnTimer", self)
 
-    self.autoCloseTimer = ApolloTimer.Create(5, false, "OnAutoCloseTimer", self)
-    self.autoCloseTimer:Stop()
+        self.autoCloseTimer = ApolloTimer.Create(5, false, "OnAutoCloseTimer", self)
+        self.autoCloseTimer:Stop()
 
-    self:InitConfigOptions()
-    self:InitTrackMaster()
+        self:InitConfigOptions()
+        self:InitTrackMaster()
 
-    if not self.enableTracking then
-      Apollo.RemoveEventHandler("UnitCreated", self)
-    end
+        if not self.enableTracking then
+          Apollo.RemoveEventHandler("UnitCreated", self)
+        end
+
+        self:InitRares()
 	end
 end
 
@@ -276,47 +171,51 @@ end
 -- values if they have not been defined yet.
 -----------------------------------------------------------------------------------------------
 function RareTracker:InitConfigOptions() 
-  if self.minLevel == nil then
-    self.minLevel = 1
-  end
+    if self.minLevel == nil then
+        self.minLevel = 1
+    end
 
-  if self.maxTrackingDistance == nil then
-    self.maxTrackingDistance = 1000
-  end  
+    if self.maxTrackingDistance == nil then
+        self.maxTrackingDistance = 1000
+    end
 
-  if self.enableTracking == nil then
-    self.enableTracking = true
-  end
+    if self.enableTracking == nil then
+        self.enableTracking = true
+    end
 
-  if self.broadcastToParty == nil then
-    self.broadcastToParty = true
-  end
+    if self.broadcastToParty == nil then
+        self.broadcastToParty = true
+    end
 
-  if self.playSound == nil then
-    self.playSound = true
-  end
+    if self.playSound == nil then
+        self.playSound = true
+    end
 
-  if self.showIndicator == nil then
-    self.showIndicator = true
-  end
+    if self.showIndicator == nil then
+        self.showIndicator = true
+    end
 
-  if self.closeEmptyTracker == nil then
-    self.closeEmptyTracker = true
-  end
+    if self.closeEmptyTracker == nil then
+        self.closeEmptyTracker = true
+    end
 
-  if self.arCustomNames == nil then
-    self.arCustomNames = {}
-  end
+    if self.arCustomNames == nil then
+        self.arCustomNames = {}
+    end
 
-  if (self.savedMajorVersion == nil or self.savedMinorVersion == nil or self.savedMajorVersion < self.nMajorVersion) and self.bNewRares and self.arRareNames ~= nil then
-    self:ShowResetRareListPrompt()
-  elseif self.savedMinorVersion ~= nil and self.savedMinorVersion < self.nMinorVersion and self.bNewRares and self.arRareNames ~= nil then
-    self:ShowResetRareListPrompt()
-  end
+    if (self.savedMajorVersion == nil or self.savedMinorVersion == nil or self.savedMajorVersion < self.nMajorVersion) and self.bNewRares and self.arRareNames ~= nil then
+        self:ShowResetRareListPrompt()
+    elseif self.savedMinorVersion ~= nil and self.savedMinorVersion < self.nMinorVersion and self.bNewRares and self.arRareNames ~= nil then
+        self:ShowResetRareListPrompt()
+    end
 
-  if self.arRareNames == nil then
-    self.arRareNames = self.arDefaultRareNames
-  end
+    if self.arRareNames == nil then
+        self.arRareNames = self.arDefaultRareNames
+    end
+
+    if self.bTrackKilledRares == nil then
+        self.bTrackKilledRares = false
+    end
 end
 
 -----------------------------------------------------------------------------------------------
@@ -460,6 +359,7 @@ function RareTracker:OnSave(eLevel)
   tSavedData.savedMajorVersion = self.nMajorVersion
   tSavedData.savedPatchVersion = self.nPatchVersion
   tSavedData.tLocations = self.tLocations
+  tSavedData.bTrackRares = self.bTrackKilledRares
 
   return tSavedData
 end
@@ -470,65 +370,69 @@ end
 -- Callback from the client when the Addon has to restore any saved data.
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnRestore(eLevel, tData)
-  if eLevel ~= GameLib.CodeEnumAddonSaveLevel.Character then
-    return nil
-  end
+    if eLevel ~= GameLib.CodeEnumAddonSaveLevel.Character then
+        return nil
+    end
   
-  if (tData.minLevel ~= nil) then
-    self.minLevel = tData.minLevel
-  end
+    if (tData.minLevel ~= nil) then
+        self.minLevel = tData.minLevel
+    end
 
-  if (tData.maxTrackingDistance ~= nil) then
-    self.maxTrackingDistance = tData.maxTrackingDistance
-  end  
+    if (tData.maxTrackingDistance ~= nil) then
+        self.maxTrackingDistance = tData.maxTrackingDistance
+    end
 
-  if (tData.playSound ~= nil) then
-    self.playSound = tData.playSound
-  end
+    if (tData.playSound ~= nil) then
+        self.playSound = tData.playSound
+    end
 
-  if (tData.showIndicator ~= nil) then
-    self.showIndicator = tData.showIndicator
-  end
+    if (tData.showIndicator ~= nil) then
+        self.showIndicator = tData.showIndicator
+    end
 
-  if (tData.enableTracking ~= nil) then
-    self.enableTracking = tData.enableTracking
-  end
+    if (tData.enableTracking ~= nil) then
+        self.enableTracking = tData.enableTracking
+    end
 
-  if (tData.broadcastToParty ~= nil) then
-    self.broadcastToParty = tData.broadcastToParty
-  end
+    if (tData.broadcastToParty ~= nil) then
+        self.broadcastToParty = tData.broadcastToParty
+    end
 
-  if (tData.closeEmptyTracker ~= nil) then
-    self.closeEmptyTracker = tData.closeEmptyTracker
-  end
+    if (tData.closeEmptyTracker ~= nil) then
+        self.closeEmptyTracker = tData.closeEmptyTracker
+    end
 
-  if (tData.rareNames ~= nil) then
-    self.arRareNames = tData.rareNames
-  end  
+    if (tData.rareNames ~= nil) then
+        self.arRareNames = tData.rareNames
+    end
 
-  if (tData.customNames ~= nil) then
-    self.arCustomNames = tData.customNames
-  end
+    if (tData.customNames ~= nil) then
+        self.arCustomNames = tData.customNames
+    end
 
-  if (tData.trackMasterLine ~= nil) then
-    self.trackMasterLine = tData.trackMasterLine
-  end
+    if (tData.trackMasterLine ~= nil) then
+        self.trackMasterLine = tData.trackMasterLine
+    end
 
-  if (tData.trackMasterEnabled ~= nil) then
-    self.bTrackMasterEnabled = tData.trackMasterEnabled
-  end
+    if (tData.trackMasterEnabled ~= nil) then
+        self.bTrackMasterEnabled = tData.trackMasterEnabled
+    end
 
-  if (tData.savedMajorVersion ~= nil) then
-    self.savedMajorVersion = tData.savedMajorVersion
-  end
+    if (tData.savedMajorVersion ~= nil) then
+        self.savedMajorVersion = tData.savedMajorVersion
+    end
 
-  if (tData.savedMinorVersion ~= nil) then
-    self.savedMinorVersion = tData.savedMinorVersion
-  end
+    if (tData.savedMinorVersion ~= nil) then
+        self.savedMinorVersion = tData.savedMinorVersion
+    end
   
-  if (tData.tLocations ~= nil) then
-    self.tLocations = tData.tLocations
-  end    
+    if (tData.tLocations ~= nil) then
+        self.tLocations = tData.tLocations
+    end
+
+    if (tData.bTrackRares ~= nil) then
+        self.bTrackKilledRares = tData.bTrackRares
+    end
 end
 
 -----------------------------------------------------------------------------------------------
@@ -555,8 +459,8 @@ function RareTracker:OnSlashCommand()
 end
 
 function RareTracker:OnClose()
-  self:StorePosition()
-  self.wndMain:Close()
+    self:StorePosition()
+    self.wndMain:Close()
 end
 
 function RareTracker:OnTimer()
@@ -617,37 +521,42 @@ end
 -- window when we have to.
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnUnitCreated(unitCreated)
-  -- We're going to ignore specific types for tracking.
-  -- They are defined in the arIgnoredTypes variable.
-  if table.find(unitCreated:GetType(), self.arIgnoredTypes) then return end
+    -- We're going to ignore specific types for tracking.
+    -- They are defined in the arIgnoredTypes variable.
+    if table.find(unitCreated:GetType(), self.arIgnoredTypes) then return end
 
-  local strUnitName = trim(unitCreated:GetName())
+    local strUnitName = trim(unitCreated:GetName())
 
-  if self:TrackeableUnit(unitCreated) and (table.find(strUnitName, self.arRareNames) or table.find(strUnitName, self.arCustomNames)) then
-    local unitRare = self.arRareMobs[unitCreated:GetName()]
+    -- If we already killed this mob, and user doesn't track killed rares
+    -- then ignore it.
+    if self.achievementEntries[strUnitName] and not self.bTrackKilledRares then return end
 
-    if not unitRare then
-      self:AddTrackedRare(unitCreated)
+    -- If we track this unit, then display it!
+    if self:TrackeableUnit(unitCreated) and (table.find(strUnitName, self.arRareNames) or table.find(strUnitName, self.arCustomNames)) then
+        local unitRare = self.arRareMobs[unitCreated:GetName()]
 
-      if self.playSound then
-        Sound.Play(Sound.PlayUIExplorerScavengerHuntAdvanced)  
-      end
+        if not unitRare then
+            self:AddTrackedRare(unitCreated)
 
-      if self.broadcastToParty and GroupLib.InGroup() then
-        -- no quick way to party chat, need to find the channel first
-        for _,channel in pairs(ChatSystemLib.GetChannels()) do
-          if channel:GetType() == ChatSystemLib.ChatChannel_Party then
-            channel:Send("Rare detected: " .. unitCreated:GetName())
-          end
+            if self.playSound then
+                Sound.Play(Sound.PlayUIExplorerScavengerHuntAdvanced)
+            end
+
+            if self.broadcastToParty and GroupLib.InGroup() then
+                -- no quick way to party chat, need to find the channel first
+                for _,channel in pairs(ChatSystemLib.GetChannels()) do
+                    if channel:GetType() == ChatSystemLib.ChatChannel_Party then
+                        channel:Send("Rare detected: " .. unitCreated:GetName())
+                    end
+                end
+            end
+
+            self.wndMain:Invoke()
+        elseif unitRare.inactive then
+            -- The mob was destroyed but has been found again
+            self:ActivateUnit(unitRare, unitCreated)
         end
-      end
-
-      self.wndMain:Invoke()
-    elseif unitRare.inactive then
-      -- The mob was destroyed but has been found again
-      self:ActivateUnit(unitRare, unitCreated)
     end
-  end
 end
 
 -----------------------------------------------------------------------------------------------
@@ -671,7 +580,6 @@ end
 -----------------------------------------------------------------------------------------------
 function RareTracker:AddTrackedRare(unitRare)
   local wndEntry = Apollo.LoadForm("RareTracker.xml", "TrackedRare", self.trackedRaresWindow, self)
-
   local strName = unitRare:GetName()
 
   self.arRareMobs[strName] = {
@@ -682,9 +590,15 @@ function RareTracker:AddTrackedRare(unitRare)
 
   local wndName = wndEntry:FindChild("Name")
   local wndDistance = wndEntry:FindChild("Distance")
+  local wndIcon = wndEntry:FindChild("AchievementIcon")
 
   if wndName then
     wndName:SetText(strName) 
+  end
+
+  -- If we have added the Icon, show it depending on the kill status of Achievement
+  if wndIcon then
+      wndIcon:Show(self.achievementEntries[strName])
   end
 
   self.trackedRaresWindow:ArrangeChildrenVert()
@@ -870,8 +784,7 @@ end
 -- Marks killed units appropriately.
 -----------------------------------------------------------------------------------------------
 function RareTracker:AddAllUnits()
-  self:BuildAchievementList()
-  self.arRareNames = shallowcopy(self.arDefaultRareNames)
+  self:InitRares()
   
   for _,item in pairs(self.arRareNames) do
     self:AddConfigRareItem(item, false)
@@ -883,24 +796,25 @@ function RareTracker:AddAllUnits()
 end
 
 -----------------------------------------------------------------------------------------------
--- BuildAchievementList
--- 
--- Builds the list of achievements so we can properly mark killed mobs.
+-- Initializes the array of rareMobs that needs to be tracked through the Achievements.
+-- Instead of coding all the names in the code, we're going to loop over the Achievements
+-- and collect all the names of the mobs that need to be killed.
 -----------------------------------------------------------------------------------------------
-function RareTracker:BuildAchievementList()
-  local achievements = AchievementsLib.GetAchievements()
+function RareTracker:InitRares()
+    self.arRareNames = {}
+    self.achievementEntries = {}
 
-  self.achievementEntries = {}
+    local arrAchievements = AchievementsLib.GetAchievements()
 
-  for _,achievement in pairs(achievements) do
-    if string.find(achievement:GetName(), "I Like") then
-      for _,item in pairs(achievement:GetChecklistItems()) do
-        self.achievementEntries[item.strChecklistEntry] = item.bIsComplete
-      end
+    for _, achievement in pairs(arrAchievements) do
+        if karrAchievements[achievement:GetName()] then
+            for _,entry in pairs(achievement:GetChecklistItems()) do
+                table.insert(self.arRareNames, entry.strChecklistEntry)
+                self.achievementEntries[entry.strChecklistEntry] = entry.bIsComplete
+            end
+        end
     end
-  end
 end
-
 -----------------------------------------------------------------------------------------------
 -- AddConfigRare
 -- 
@@ -982,9 +896,7 @@ end
 -- Button functions
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnResetButton()
-  self.arRareNames = table.shallow_copy(self.arDefaultRareNames)
   self.configRaresList:DestroyChildren()
-
   self:AddAllUnits()
   self.configRaresList:SetVScrollPos(0)
 end
@@ -1005,6 +917,14 @@ end
 
 function RareTracker:OnBroadcastUncheck(windowHandler, windowControl)
   self.broadcastToParty = false
+end
+
+function RareTracker:OnTrackKilledCheck(windowHandler, windowControl)
+    self.bTrackKilledRares = true
+end
+
+function RareTracker:OnTrackKilledUncheck(windowHandler, windowControl)
+    self.bTrackKilledRares = false
 end
 
 function RareTracker:OnPlaySoundCheck(windowHandler, windowControl)

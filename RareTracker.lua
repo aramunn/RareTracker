@@ -92,8 +92,8 @@ function RareTracker:new(o)
 
 	self.__index = self
 	self.nMajorVersion = 2
-	self.nMinorVersion = 0
-	self.nPatchVersion = 4
+	self.nMinorVersion = 2
+	self.nPatchVersion = 0
 	self.bNewRares = false
 	self.arRareMobs = {}
 	self.arIgnoredTypes = { "Mount", "Scanner", "Simple" }

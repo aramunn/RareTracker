@@ -76,7 +76,7 @@ function RareTracker:new(o)
       "Mikolai the Malevolent","The Shadow Queen","XL-51 Goliath","Queen Bizzelt","Captain Fripeti",
       "Groundswell Guardsman", "RG3 Blitzbuster","Brigadier Bellza","Black Besieger","Exterminator Cryvex",
       "Veshra the Eye of the Storm","Slopper","Gravek the Swale-Striker","Veldrok the Vindicator", "Moreg the Mauler",
-      "Zersa the Betrothed","Kalifa","Cromlech the Kilnborn","Suul of the Silva","Meldrid the Decrepit","Blisterbane",
+      "Zersa the Betrothed","Kalifa","Cromlech the Kilnborn","Soul of the Silva","Meldrid the Decrepit","Blisterbane",
       "Squall","Flamesurge","Rumble", "Doctor Rotthrall","Kryne the Tidebreaker","Quin Quickdraw","Andara the Seer",
       "Crog the Smasher","ER-7 Explorer","AX-12 Defender","Torgal the Devastator","Scabclaw", "Gorax the Putrid",
       "Old Scrappy","Dreadbone","Guardian Xeltos","Guardian Zelkix","Augmented Ragemaster","Flintrock","Gorignak",

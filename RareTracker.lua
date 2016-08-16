@@ -115,7 +115,7 @@ local karrAchievements = {
         ["Borreau exotique: Refuge Impur"] = true,
         ["Borreau exotique: Infection"] = true,
         ["Borreau exotique: Arcterra"] = true,
-        ["Boss : Ke Saint des chasseurs"] = true
+        ["Boss : Le Saint des chasseurs"] = true
     }
 }
 -----------------------------------------------------------------------------------------------

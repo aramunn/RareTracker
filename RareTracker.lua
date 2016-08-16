@@ -53,106 +53,168 @@ end
 -- Initialization
 -----------------------------------------------------------------------------------------------
 function RareTracker:new(o)
-    o = o or {}
+  o = o or {}
 
 	setmetatable(o, self)
 
 	self.__index = self
-
 	self.nMajorVersion = 2
 	self.nMinorVersion = 0
 	self.nPatchVersion = 4
 	self.bNewRares = false
 	self.arRareMobs = {}
 	self.arIgnoredTypes = { "Mount", "Scanner", "Simple" }
+  self.wndSelectedRare = nil
 
 	local strCancelLocale = Apollo.GetString("CRB_Cancel");
   	
-    if strCancelLocale == "Cancel" then
-	     self.arDefaultRareNames = {"Nomjin","Frostshard","Prodigy","Beastmaster Xix","Iiksy","Shadowfall","Leatherface","Stonepile","Stanch","Galegut","Gnawer",
-		    "Deadbough","Barebones","Wormwood the Wraithmaker","Wormwood Acolyte","Ashwin the Stormcrested","Claymore XT-9","AG5 Blitzbuster","Nym Maiden of Mercy",
-		    "Asteria","Acacia","Atethys","Mikolai the Malevolent","The Shadow Queen","XL-51 Goliath","Queen Bizzelt","Captain Fripeti","Groundswell Guardsman",
-		    "RG3 Blitzbuster","Brigadier Bellza","Black Besieger","Exterminator Cryvex","Veshra the Eye of the Storm","Slopper","Gravek the Swale-Striker","Veldrok the Vindicator",
-		    "Moreg the Mauler","Zersa the Betrothed","Kalifa","Cromlech the Kilnborn","Suul of the Silva","Meldrid the Decrepit","Blisterbane","Squall","Flamesurge","Rumble",
-		    "Doctor Rotthrall","Kryne the Tidebreaker","Quin Quickdraw","Andara the Seer","Crog the Smasher","ER-7 Explorer","AX-12 Defender","Torgal the Devastator","Scabclaw",
-		    "Gorax the Putrid","Old Scrappy","Dreadbone","Guardian Xeltos","Guardian Zelkix","Augmented Ragemaster","Flintrock","Gorignak","Granitefist","Dreich","Beelzebug","Whitefang",
-		    "Detritus","Lifegrazer","The Pink Pumera","The Queen","Blinky","Drifter","The Lobotomizer","Abyss","Deadpaws","Alpha Guard One","Alpha Guard Two","Strainblade","Vorgrim",
-		    "The Vultch","Deathgrazer","Purple Peep Eater","The Ravagist","Amorphomorph","King Grimrock","Scrabbles","Sgt. Garog","Excargo","Gorganoth Prime","The Floater","Weapon 24",
-		    "Ghostfin","Torrent","Whirlwind","Dreadmorel","Regulator 11","Auxiliary Probe","Sarod the Senseless","Aeacus","Silverhorn","Voresk Venomgill","The Terror of Bloodstone",
-		    "Zakan the Necroshaman","Wrath of Niwha","Felidax","Terminus Rex","Gavwyn the Verdant Defender","Steel Jaw","Arianna Wildgrass","Arianna's Sentry","Arianna's Assassin",
-		    "Subject: Rho","The Endless Hunger","Flamekin","Nakaz the Deadlord","Hotshot Braz","Bloodtail","Blightbeak","Deathpaw","Grudder","Quiggles","King Cruelclaw","Queen Kizzek",
-		    "Grovekeeper Fellia","Razorclaw","Chief Blackheart","Rondo","Rondo's Squad","XT-9 Alpha","Crystalback","Rashanna the Soul Drinker","The Embermaster","Rotfang","Spellmaster Verwyn",
-		    "Subject V - Tempest","Subject J - Fiend","Subject K - Brute","KE-27 Sentinel","KE-28 Energizer","Subject Tau","Grinder","Bugwit","Icefang","Frostbite","Grellus the Blight Queen",
-		    "Torvex the Crystal Titan","K9 Destroyer","Stormshell","FR2 Blitzer","Permafrost","Drud the Demented","Frosty the Snowtail","Skorga the Frigid","Warlord Nagvox","Shellshock",
-		    "Blubbergut","Frozenclaw","Stonegut","Savageclaw","Grug the Executioner","Blightfang","Basher Grogek","Flame-Binder Sorvel","Flame-Binder Trovin","Queen Tizzet","Dominator",
-		    "Infinimaw","Bloodmane","\"Hotshot\" Braz","The Bumbler","Aeroth the Sentinel","Wretch the Impure","Gnarly Hookfoot","Radical Hookfoot","Dramatic Skug Queen","Soultaker",
-		    "Bogus Fraz","Gnashing Cankertube Garr","The Stump","Fool's Gold","NG Protector One","Marmota","Ruga the Ageless","Lightback","Grace","Pusbelly","Randok","Tessa","Flood",
-		    "Flametongue","Slab","Final Flight","The Enlightened","Growth","Proliferator","Tainted Drone","Tainted Direweb","Deathbite","The Outsider","SCS Adjutant","Tharge the Waterseeker","Lazy Lenny",
-            -- Arcterra
-            "Iceberg","Snowblind","Frosthide","Korgar the Ossified","Winter","Windlash"
-        }
+  if strCancelLocale == "Cancel" then
+    self.arDefaultRareNames = {
+      "Nomjin","Frostshard","Prodigy","Beastmaster Xix","Iiksy","Shadowfall","Leatherface","Stonepile","Stanch",
+      "Galegut","Gnawer", "Deadbough","Barebones","Wormwood the Wraithmaker","Wormwood Acolyte",
+      "Ashwin the Stormcrested","Claymore XT-9","AG5 Blitzbuster","Nym Maiden of Mercy", "Asteria","Acacia","Atethys",
+      "Mikolai the Malevolent","The Shadow Queen","XL-51 Goliath","Queen Bizzelt","Captain Fripeti",
+      "Groundswell Guardsman", "RG3 Blitzbuster","Brigadier Bellza","Black Besieger","Exterminator Cryvex",
+      "Veshra the Eye of the Storm","Slopper","Gravek the Swale-Striker","Veldrok the Vindicator", "Moreg the Mauler",
+      "Zersa the Betrothed","Kalifa","Cromlech the Kilnborn","Suul of the Silva","Meldrid the Decrepit","Blisterbane",
+      "Squall","Flamesurge","Rumble", "Doctor Rotthrall","Kryne the Tidebreaker","Quin Quickdraw","Andara the Seer",
+      "Crog the Smasher","ER-7 Explorer","AX-12 Defender","Torgal the Devastator","Scabclaw", "Gorax the Putrid",
+      "Old Scrappy","Dreadbone","Guardian Xeltos","Guardian Zelkix","Augmented Ragemaster","Flintrock","Gorignak",
+      "Granitefist","Dreich","Beelzebug","Whitefang", "Detritus","Lifegrazer","The Pink Pumera","The Queen","Blinky",
+      "Drifter","The Lobotomizer","Abyss","Deadpaws","Alpha Guard One","Alpha Guard Two","Strainblade","Vorgrim",
+      "The Vultch","Deathgrazer","Purple Peep Eater","The Ravagist","Amorphomorph","King Grimrock","Scrabbles",
+      "Sgt. Garog","Excargo","Gorganoth Prime","The Floater","Weapon 24", "Ghostfin","Torrent","Whirlwind","Dreadmorel",
+      "Regulator 11","Auxiliary Probe","Sarod the Senseless","Aeacus","Silverhorn","Voresk Venomgill",
+      "The Terror of Bloodstone", "Zakan the Necroshaman","Wrath of Niwha","Felidax","Terminus Rex",
+      "Gavwyn the Verdant Defender","Steel Jaw","Arianna Wildgrass","Arianna's Sentry","Arianna's Assassin",
+      "Subject: Rho","The Endless Hunger","Flamekin","Nakaz the Deadlord","Hotshot Braz","Bloodtail","Blightbeak",
+      "Deathpaw","Grudder","Quiggles","King Cruelclaw","Queen Kizzek", "Grovekeeper Fellia","Razorclaw",
+      "Chief Blackheart","Rondo","Rondo's Squad","XT-9 Alpha","Crystalback","Rashanna the Soul Drinker",
+      "The Embermaster","Rotfang","Spellmaster Verwyn", "Subject V - Tempest","Subject J - Fiend","Subject K - Brute",
+      "KE-27 Sentinel","KE-28 Energizer","Subject Tau","Grinder","Bugwit","Icefang","Frostbite",
+      "Grellus the Blight Queen", "Torvex the Crystal Titan","K9 Destroyer","Stormshell","FR2 Blitzer","Permafrost",
+      "Drud the Demented","Frosty the Snowtail","Skorga the Frigid","Warlord Nagvox","Shellshock", "Blubbergut",
+      "Frozenclaw","Stonegut","Savageclaw","Grug the Executioner","Blightfang","Basher Grogek","Flame-Binder Sorvel",
+      "Flame-Binder Trovin","Queen Tizzet","Dominator", "Infinimaw","Bloodmane","\"Hotshot\" Braz","The Bumbler",
+      "Aeroth the Sentinel","Wretch the Impure","Gnarly Hookfoot","Radical Hookfoot","Dramatic Skug Queen","Soultaker",
+		  "Bogus Fraz","Gnashing Cankertube Garr","The Stump","Fool's Gold","NG Protector One","Marmota","Ruga the Ageless",
+      "Lightback","Grace","Pusbelly","Randok","Tessa","Flood", "Flametongue","Slab","Final Flight","The Enlightened",
+      "Growth","Proliferator","Tainted Drone","Tainted Direweb","Deathbite","The Outsider","SCS Adjutant",
+      "Tharge the Waterseeker","Lazy Lenny",
+
+      -- Arcterra
+      "Iceberg","Snowblind","Frosthide","Korgar the Ossified","Winter","Windlash",
+
+      -- Exotic Executioner Achievement
+      "Bot Pulverizer LD-17", "Tuskar the Shatterhorn", "Glacierjaw", "Frozenclaw", "Sleethide", "Soragh Silvertooth",
+      "X426 Augmentor Apex", "Maw the Junglestalker", "Vitala the Overgrown", "Velum the Overgrown",
+      "Greva the Bone Collector", "Viceclaw the Skinlasher", "Othrum the Windlasher", "Magthar the Meteorborn",
+      "Pharos the Immolator", "Cz-5 Exobreaker", "Nauticus the Abyssal", "Cerebros", "Welskar the Wild",
+      "Ersa the Soulrender", "Dara the Bladekeeper", "Kalsha the Life-Sworn", "Kelvia the Slavemaster",
+      "Backwash the Brackish", "The Primal Destroyer", "Vileblossom the Putrid", "Malfeast the Unclean",
+      "Grimtangle the Weaver", "Tecton the Immovable", "Demonpaw", "Skunkh the Penalizer", "Snerf the Bloodnose",
+      "Alex \"Stabby\" Boyer", "Skawren the Gale Witch", "Sun-Holder", "Ragestone", "Bloodtusk", "Bloodpaw",
+      "Worg the Mind Corruptor", "Kedrik the Crazed", "Verok the Insane", "X21 Goliath", "D23 Titan", "Tremgut",
+      "Zeke the Anguished", "Devan the Disturbed", "Crispin the Tormented", "Malmedical Mechanica", "Pyropaw the Smokey",
+      "Aranea", "Shatterback", "Tidebreaker Sorlek", "Spinebreaker Brukah", "Frubb the Grotesque", "Grodga the Wicked",
+      "Freezia", "Freygoth", "Frethalem", "Fregad",
+
+      -- Apex Lifeforms
+      "Abominus", "Skalgoth the Coldhearted", "Uth Kundar", "Nashdul the Unchained", "Ghost", "Morthun the Shieldbreaker",
+      "Frost-Keeper Arcanist", "Malfunctioning Unit \"GL-4C13R\""
+    }
 	elseif strCancelLocale == "Annuler" then
-	    self.arDefaultRareNames = {"Nomjin","Éclat de givre","Prodige","Dompteur Xix","Iiksy","Ombrechute","Leatherface","Tas de pierres","Endigueur","Souffletripe","Rongeur",
-		    "Mortebranche","Ossanu","Verbois le Courrouceur","Acolytes verbois","Ashwin le Crêtetempête","Claymore XT-9","AG5 Blitzbuster","Nym, vierge de la pitié",
-		    "Asteria","Acacia","Atethys","Mikolai le malfaisant","La reine des ombres","Goliath XL-51","Reine Bizzbizze","Captaine Fripeti","Garde du Tellurixe",
-		    "Bombardeur RG3","Brigadier Bellza","Assiégeant noir","Exterminateur Cryvex","Veshra l'œil du cyclone","Renverseur","Gravek le Frappefosse","Veldrok le Vengeur",
-		    "Moreg le Déchiqueteur","Zersa la Promise","Kalifa","Cromlech l'Enfourné","Âme sylvaine","Meldrid la Décatie","Cloquepoil","Squall","Retour de flamme","Rumble",
-		    "Docteur Vilserf","Kryne le Brisemarée","Quin fine gâchette","Andara le Devin","Crog le Fracasseur","Explorateur ER-7","Défenseur AX-12","Torgal le Dévasteur","Corrugriffe",
-		    "Gorax le Putride","Vieux tas de ferraille","Épouvantos","Gardien Xeltos","Gardien Zelkix","Maîtrerage augmenté","Silex","Gorignak","Poing de granit","Dreich","Bourdard","Croblanc",
-		    "Détritus","Viverelle","The Pink Pumera","La reine","Cligneur","Flotteur","Le Lobotomiseur","Abîme","Donnemorts","Garde Alpha 1","Garde Alpha 2","Souille-lame","Vorgrim",
-		    "Le Vautour","Morterelle","Purple Peep Eater","Le Ravageur","Amorphomorphe","Roi Sinistreroche","Scrabbles","Sergent Garog","Excargo","Primo Gorganoth","Le Flotteur","Arme 24",
-		    "Spectraileron","Torrent","Tourbillon","Effroimorille","Régulateur 11","Sonde auxiliaire","Sarod l'Insensé","Aeacus","Cornargent","Voresk Branchivenin","La Terreur de Rochesang",
-		    "Zakan le Nécrochaman","Courroux du Niwha","Felidax","Terminus Rex","Gavwyn le Défenseur verdoyant","Mâchoire d'acier","Arianna Herbefolle","Sentinelle d'Arianna","Assassin d'Arianna",
-		    "Sujets : Rho","La faim sans fin","Soucheflamme","Nakaz le Seigneur mort","Hotshot Braz","Sanguifouet","Rouillebec","Griffemort","Grapace","Grouillis","Roi Lacérace","Reine Kizzek",
-		    "Garde-bosquet Fellia","Acèregriffe","Chef de Noircœur","Rondo","Équipe de Rondo","Alpha XT-9","Marbredos","Rashanna la Buveuse d'âmes","Le Maître des braises","Putrecroc","Maître des sorts Verwyn",
-		    "Sujet V : tempête","Sujet J : démon","Sujet K : brute","Sentinelle KE-27","Source d'énergie KE-28","Sujet Tau","Broyeur","Bugwit","Croc-de-glace","Moglace","Grellus, la reine de la Rouille",
-		    "Torvex le Titan de cristal","Destructeur K9","Coquetempête","Pilonneur FR2","Permafrost","Drud le Dément","Frosty the Snowtail","Skorga le Glacé","Seigneur de guerre Nagvox","Shellshock",
-		    "Tripesuif","Griffegel","Tripes de pierre","Brutegriffe","Grug le bourreau","Rouillecroc","Dérouilleur Grogek","Attache-Flamme Sorvel","Attache-Flamme Trovin","Reine Tizzet","Dominateur",
-		    "Mâchenéant","Sanguicrin","Cador Braz","L'Empoté","Aeroth la Sentinelle","Wretch l'Impur","Croche-pattes ratatiné","Croche-pattes radical","Reine skug dramatique","Mange-âme",
-		    "Faux Friz","Garr chancretube grinçant","La Souche","L'or du fou","NG Premier Protecteur","Marmota","Ruga l'Éternel","Allègedos","Gracieux","Suppustule","Randok","Tessa","Inondation",
-		    "Langueflamme","Bloc de pierre","Vol final","L'Illuminé","Croissance","Proliférateur","Frelon corrompu","Sinistoile impure","Crofuneste","L'Étranger","Instructuer SSC","Tharge le Sourcier","Lenny le Fainéant",
-            -- Arcterra
-            "Iceberg","Neige aveuglante","Givrepeau","Korgar l'Ossifié","Hiver","Perce-vent"
-        }
-    elseif strCancelLocale == "Abbrechen" then
-	    self.arDefaultRareNames = {"Nomjin","Frostscherbe","Wunderkind","Bestienmeisterin Xix","Iiksy","Schattenfall","Leatherface","Steinhaufen","Stehmann","Orkanbauch","Kauer",
-		    "Totzweig","Blankknochen","Wurmholz der Geistermacher","Wurmholz-Akolyth","Ashwin der Sturmbedeckte","Claymore XT-9","Blitzjäger AG5","Nym Jungfrau der Gnade",
-		    "Asteria","Acacia","Atethys","Mikolai der Grausame","Die Schattenkönigin","XL-51 Goliath","Königin Bizzelt","Captain Fripeti","Schwellgrund-Wachmann",
-		    "RG3-Blitzjäger","Brigadekommandeur Bellza","Schwarzer Belagerer","Exterminator Cryvex","Veshra, das Auge des Sturms","Schwapper","Gravek der Muldenschläger","Veldrok der Verteidiger",
-		    "Moreg der Malmer","Zersa die Verlobte","Kalifa","Cromlech der Brennofengeborene","Seele der Silva","Meldrid die Altersschwache","Blasenfluch","Squall","Flammenwoge","Rumble",
-		    "Doktor Faulsklave","Kryne der Wellenbrecher","Quin Flinkhand","Andara die Seherin","Crog der Zertrümmerer","ER-7 Kundschafter","AX-12 Verteidiger","Torgal der Verwüster","Schorfklaue",
-		    "Gorax der Verweser","Alte Rumpelkiste","Schreckensknochen","Wächter Xeltos","Wächter Zelkix","Augmentierter Zornmeister","Feuerstein","Gorignak","Granitfaust","Dreich","Summuel","Weißzahn",
-		    "Geröll","Lebensgraser","The Pink Pumera","Die Königin","Blinzli","Gammler","Der Lobotomisierer","Abgrund","Totepfoten","Alphawache Eins","Alphawache Zwei","Transmutationsklinge","Vorgrimm",
-		    "Der Vultch","Todgraser","Purple Peep Eater","Der Verwüstologe","Amorphomorph","König Grimmfels","Scrabbles","Sgt. Garog","Exfracht","Gorganoth der Erste","Der Schweber","Waffe 24",
-		    "Geistflosse","Strömung","Wirbelwind","Furchtmorchel","Regulator 11","Hilfssonde","Sarod der Sinnlose","Aeacus","Silberhorn","Voresk Giftkiemen","Der Schrecken von Blutstein",
-		    "Zakan der Nekroschamane","Zorn von Niwha","Felidax","Terminus Rex","Gavwyn der Grüne Verteidiger","Stahlkiefer","Arianna Wildgras","Ariannas Wachposten","Ariannas Assassinin",
-		    "Subjekt: Rho","Der unstillbare Hunger","Flammensippe","Nakaz der Totenherr","Hotshot Braz","Blutschwanz","Faulschnabel","Todespfote","Grudder","Kringel","König Gräuelklaue","Königin Kizzek",
-		    "Hainhüterin Fellia","Scharfkralle","Häuptling Schwarzherz","Rondo","Rondos Trupp","XT-9-Alpha","Kristallrücken","Rashanna die Seelentrinkerin","Der Glutmeister","Faulzahn","Spruchmeister Verwyn",
-		    "Subjekt V – Sturm","Subjekt J – Scheusal","Subjekt K – Widerling","Wache KE-27","Auflader KE-28","Objekt: Tau","Schleifer","Kleinsinn","Eiszahn","Frostbiss","Grellus die Fäulniskönigin",
-		    "Torvex der Kristalltitan","K9 Zerstörer","Sturmpanzer","FR2 Blitzer","Permafrost","Drud der Verrückte","Frosty the Snowtail","Skorga der Frostige","Kriegsherr Nagvox","Shellshock",
-		    "Speckbauch","Frostklaue","Steingedärm","Wildklaue","Grug der Scharfrichter","Faulzahn","Spalter Grogek","Flammenbinder Sorvel","Flammenbinder Trovin","Königin Tizzet","Dominator",
-		    "Endlosschlund","Blutmähne","\"„Teufelskerl“\" Braz","Der Summser","Aeroth der Wachhabende","Teufel der Unreine","Knorriger Hakenfuß","Radikaler Hakenfuß","Dramatische Skugkönigin","Seelennehmer",
-		    "Bogus Fraz","Knirschender Wucher-Garr","Der Stumpf","Narrengold","NG-Protektor Eins","Marmota","Ruga der Alterslose","Leichtschulter","Liebreiz","Eiterbauch","Randok","Tessa","Flut",
-		    "Flammenzunge","Steinplatte","Finalflug","Der Erleuchtete","Wuchs","Vermehrer","Verdorbene Drohne","Finsternetz-Verdorbener","Todesbiss","Der Außenseiter","SKS-Adjutant","Wassersucher Tharge","Fauler Lenny",
-            -- Arcterra
-            "Eisberg","Schneeblind","Frostbalg","Korgar der Verknöcherte","Winter","Windpeitsche"
-        }
-    else
-        self.arDefaultRareNames = {}
-    end
+	  self.arDefaultRareNames = {
+      "Nomjin","Éclat de givre","Prodige","Dompteur Xix","Iiksy","Ombrechute","Leatherface","Tas de pierres",
+      "Endigueur","Souffletripe","Rongeur", "Mortebranche","Ossanu","Verbois le Courrouceur","Acolytes verbois",
+      "Ashwin le Crêtetempête","Claymore XT-9","AG5 Blitzbuster","Nym, vierge de la pitié", "Asteria","Acacia",
+      "Atethys","Mikolai le malfaisant","La reine des ombres","Goliath XL-51","Reine Bizzbizze","Captaine Fripeti",
+      "Garde du Tellurixe", "Bombardeur RG3","Brigadier Bellza","Assiégeant noir","Exterminateur Cryvex",
+      "Veshra l'œil du cyclone","Renverseur","Gravek le Frappefosse","Veldrok le Vengeur", "Moreg le Déchiqueteur",
+      "Zersa la Promise","Kalifa","Cromlech l'Enfourné","Âme sylvaine","Meldrid la Décatie","Cloquepoil","Squall",
+      "Retour de flamme","Rumble", "Docteur Vilserf","Kryne le Brisemarée","Quin fine gâchette","Andara le Devin",
+      "Crog le Fracasseur","Explorateur ER-7","Défenseur AX-12","Torgal le Dévasteur","Corrugriffe",
+      "Gorax le Putride","Vieux tas de ferraille","Épouvantos","Gardien Xeltos","Gardien Zelkix","Maîtrerage augmenté",
+      "Silex","Gorignak","Poing de granit","Dreich","Bourdard","Croblanc", "Détritus","Viverelle",
+      "The Pink Pumera","La reine","Cligneur","Flotteur","Le Lobotomiseur","Abîme","Donnemorts","Garde Alpha 1",
+      "Garde Alpha 2","Souille-lame","Vorgrim", "Le Vautour","Morterelle","Purple Peep Eater","Le Ravageur",
+      "Amorphomorphe","Roi Sinistreroche","Scrabbles","Sergent Garog","Excargo","Primo Gorganoth","Le Flotteur",
+      "Arme 24", "Spectraileron","Torrent","Tourbillon","Effroimorille","Régulateur 11","Sonde auxiliaire",
+      "Sarod l'Insensé","Aeacus","Cornargent","Voresk Branchivenin","La Terreur de Rochesang", "Zakan le Nécrochaman",
+      "Courroux du Niwha","Felidax","Terminus Rex","Gavwyn le Défenseur verdoyant","Mâchoire d'acier",
+      "Arianna Herbefolle","Sentinelle d'Arianna","Assassin d'Arianna", "Sujets : Rho","La faim sans fin",
+      "Soucheflamme","Nakaz le Seigneur mort","Hotshot Braz","Sanguifouet","Rouillebec","Griffemort","Grapace",
+      "Grouillis","Roi Lacérace","Reine Kizzek", "Garde-bosquet Fellia","Acèregriffe","Chef de Noircœur","Rondo",
+      "Équipe de Rondo","Alpha XT-9","Marbredos","Rashanna la Buveuse d'âmes","Le Maître des braises","Putrecroc",
+      "Maître des sorts Verwyn", "Sujet V : tempête","Sujet J : démon","Sujet K : brute","Sentinelle KE-27",
+      "Source d'énergie KE-28","Sujet Tau","Broyeur","Bugwit","Croc-de-glace","Moglace",
+      "Grellus, la reine de la Rouille", "Torvex le Titan de cristal","Destructeur K9","Coquetempête","Pilonneur FR2",
+      "Permafrost","Drud le Dément","Frosty the Snowtail","Skorga le Glacé","Seigneur de guerre Nagvox","Shellshock",
+      "Tripesuif","Griffegel","Tripes de pierre","Brutegriffe","Grug le bourreau","Rouillecroc","Dérouilleur Grogek",
+      "Attache-Flamme Sorvel","Attache-Flamme Trovin","Reine Tizzet","Dominateur", "Mâchenéant","Sanguicrin",
+      "Cador Braz","L'Empoté","Aeroth la Sentinelle","Wretch l'Impur","Croche-pattes ratatiné","Croche-pattes radical",
+      "Reine skug dramatique","Mange-âme", "Faux Friz","Garr chancretube grinçant","La Souche","L'or du fou",
+      "NG Premier Protecteur","Marmota","Ruga l'Éternel","Allègedos","Gracieux","Suppustule","Randok","Tessa",
+      "Inondation", "Langueflamme","Bloc de pierre","Vol final","L'Illuminé","Croissance","Proliférateur",
+      "Frelon corrompu","Sinistoile impure","Crofuneste","L'Étranger","Instructuer SSC","Tharge le Sourcier",
+      "Lenny le Fainéant",
+
+      -- Arcterra
+      "Iceberg","Neige aveuglante","Givrepeau","Korgar l'Ossifié","Hiver","Perce-vent"
+    }
+  elseif strCancelLocale == "Abbrechen" then
+    self.arDefaultRareNames = {
+      "Nomjin","Frostscherbe","Wunderkind","Bestienmeisterin Xix","Iiksy","Schattenfall","Leatherface","Steinhaufen",
+      "Stehmann","Orkanbauch","Kauer", "Totzweig","Blankknochen","Wurmholz der Geistermacher","Wurmholz-Akolyth",
+      "Ashwin der Sturmbedeckte","Claymore XT-9","Blitzjäger AG5","Nym Jungfrau der Gnade", "Asteria","Acacia",
+      "Atethys","Mikolai der Grausame","Die Schattenkönigin","XL-51 Goliath","Königin Bizzelt","Captain Fripeti",
+      "Schwellgrund-Wachmann", "RG3-Blitzjäger","Brigadekommandeur Bellza","Schwarzer Belagerer","Exterminator Cryvex",
+      "Veshra, das Auge des Sturms","Schwapper","Gravek der Muldenschläger","Veldrok der Verteidiger",
+      "Moreg der Malmer","Zersa die Verlobte","Kalifa","Cromlech der Brennofengeborene","Seele der Silva",
+      "Meldrid die Altersschwache","Blasenfluch","Squall","Flammenwoge","Rumble", "Doktor Faulsklave",
+      "Kryne der Wellenbrecher","Quin Flinkhand","Andara die Seherin","Crog der Zertrümmerer","ER-7 Kundschafter",
+      "AX-12 Verteidiger","Torgal der Verwüster","Schorfklaue", "Gorax der Verweser","Alte Rumpelkiste",
+      "Schreckensknochen","Wächter Xeltos","Wächter Zelkix","Augmentierter Zornmeister","Feuerstein","Gorignak",
+      "Granitfaust","Dreich","Summuel","Weißzahn", "Geröll","Lebensgraser","The Pink Pumera","Die Königin","Blinzli",
+      "Gammler","Der Lobotomisierer","Abgrund","Totepfoten","Alphawache Eins","Alphawache Zwei","Transmutationsklinge",
+      "Vorgrimm", "Der Vultch","Todgraser","Purple Peep Eater","Der Verwüstologe","Amorphomorph","König Grimmfels",
+      "Scrabbles","Sgt. Garog","Exfracht","Gorganoth der Erste","Der Schweber","Waffe 24", "Geistflosse","Strömung",
+      "Wirbelwind","Furchtmorchel","Regulator 11","Hilfssonde","Sarod der Sinnlose","Aeacus","Silberhorn",
+      "Voresk Giftkiemen","Der Schrecken von Blutstein", "Zakan der Nekroschamane","Zorn von Niwha","Felidax",
+      "Terminus Rex","Gavwyn der Grüne Verteidiger","Stahlkiefer","Arianna Wildgras","Ariannas Wachposten",
+      "Ariannas Assassinin", "Subjekt: Rho","Der unstillbare Hunger","Flammensippe","Nakaz der Totenherr",
+      "Hotshot Braz","Blutschwanz","Faulschnabel","Todespfote","Grudder","Kringel","König Gräuelklaue","Königin Kizzek",
+      "Hainhüterin Fellia","Scharfkralle","Häuptling Schwarzherz","Rondo","Rondos Trupp","XT-9-Alpha","Kristallrücken",
+      "Rashanna die Seelentrinkerin","Der Glutmeister","Faulzahn","Spruchmeister Verwyn", "Subjekt V – Sturm",
+      "Subjekt J – Scheusal","Subjekt K – Widerling","Wache KE-27","Auflader KE-28","Objekt: Tau","Schleifer",
+      "Kleinsinn","Eiszahn","Frostbiss","Grellus die Fäulniskönigin", "Torvex der Kristalltitan","K9 Zerstörer",
+      "Sturmpanzer","FR2 Blitzer","Permafrost","Drud der Verrückte","Frosty the Snowtail","Skorga der Frostige",
+      "Kriegsherr Nagvox","Shellshock", "Speckbauch","Frostklaue","Steingedärm","Wildklaue","Grug der Scharfrichter",
+      "Faulzahn","Spalter Grogek","Flammenbinder Sorvel","Flammenbinder Trovin","Königin Tizzet","Dominator",
+      "Endlosschlund","Blutmähne","\"„Teufelskerl“\" Braz","Der Summser","Aeroth der Wachhabende","Teufel der Unreine",
+      "Knorriger Hakenfuß","Radikaler Hakenfuß","Dramatische Skugkönigin","Seelennehmer", "Bogus Fraz",
+      "Knirschender Wucher-Garr","Der Stumpf","Narrengold","NG-Protektor Eins","Marmota","Ruga der Alterslose",
+      "Leichtschulter","Liebreiz","Eiterbauch","Randok","Tessa","Flut", "Flammenzunge","Steinplatte","Finalflug",
+      "Der Erleuchtete","Wuchs","Vermehrer","Verdorbene Drohne","Finsternetz-Verdorbener","Todesbiss",
+      "Der Außenseiter","SKS-Adjutant","Wassersucher Tharge","Fauler Lenny",
+
+      -- Arcterra
+      "Eisberg","Schneeblind","Frostbalg","Korgar der Verknöcherte","Winter","Windpeitsche"
+    }
+  else
+    self.arDefaultRareNames = {}
+  end
 
 	table.sort(self.arDefaultRareNames)
-    self.wndSelectedRare = nil
 
-    return o
+  return o
 end
 
 function RareTracker:Init()
 	local bHasConfigureFunction = true
 	local strConfigureButtonText = "RareTracker"
-	local tDependencies = {
-	}
-    
+	local tDependencies = {}
+
   Apollo.RegisterAddon(self, bHasConfigureFunction, strConfigureButtonText, tDependencies)
 end
  

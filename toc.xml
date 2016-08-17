@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Addon Author="Tomed &amp; Olivar Nax" APIVersion="12" Name="RareTracker" Description="RareTracker notifies you when you&apos;re near a rare mob" Version="2.2">
+<Addon Author="Tomed &amp; Olivar Nax" APIVersion="13" Name="RareTracker" Description="RareTracker notifies you when you&apos;re near a rare mob" Version="2.2">
     <Script Name="RareTracker.lua"/>
     <Form Name="RareTracker.xml"/>
 </Addon>

@@ -308,13 +308,11 @@ function RareTracker:InitConfigOptions()
         self:ShowResetRareListPrompt()
     end
 
-    if self.arRareNames == nil then
-        self.arRareNames = self.arDefaultRareNames
-    end
-
     if self.bTrackKilledRares == nil then
         self.bTrackKilledRares = false
     end
+
+    self:InitRares()
 end
 
 -----------------------------------------------------------------------------------------------
@@ -335,10 +333,12 @@ end
 -- usng what is default in the default table.
 -----------------------------------------------------------------------------------------------
 function RareTracker:OnResetRaresButton()
-    self.arRareNames = shallowcopy(self.arDefaultRareNames)
+    self:InitRares()
+
     if self.wndConfig ~= nil then
         self.wndConfig:Close()
     end
+
     self.resetWindow:Close()
 end
 
@@ -450,7 +450,6 @@ function RareTracker:OnSave(eLevel)
     tSavedData.playSound = self.playSound
     tSavedData.showIndicator = self.showIndicator
     tSavedData.closeEmptyTracker = self.closeEmptyTracker
-    tSavedData.rareNames = self.arRareNames
     tSavedData.customNames = self.arCustomNames
     tSavedData.trackMasterLine = self.trackMasterLine
     tSavedData.trackMasterEnabled = self.bTrackMasterEnabled
@@ -501,10 +500,6 @@ function RareTracker:OnRestore(eLevel, tData)
         self.closeEmptyTracker = tData.closeEmptyTracker
     end
 
-    if (tData.rareNames ~= nil) then
-        self.arRareNames = tData.rareNames
-    end
-
     if (tData.customNames ~= nil) then
         self.arCustomNames = tData.customNames
     end
@@ -532,6 +527,8 @@ function RareTracker:OnRestore(eLevel, tData)
     if (tData.bTrackRares ~= nil) then
         self.bTrackKilledRares = tData.bTrackRares
     end
+
+    self:InitRares()
 end
 
 -----------------------------------------------------------------------------------------------

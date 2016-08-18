@@ -15,125 +15,42 @@ local activeTextColor = ApolloColor.new("xkcdAppleGreen")
 local inactiveTextColor = ApolloColor.new("xkcdCherryRed")
 local customUnitColor = ApolloColor.new("xkcdBloodOrange")
 local karrAchievements = {
-    ["EN"] = {
-        -- Dominion Only
-        ["I Like it Rare: Auroria"] = true,
-        ["I Like it Rare: Deradune"] = true,
-        ["I Like it Rare: Ellevar"] = true,
-        -- Exile Only
-        ["I Like it Rare: Algoroc"] = true,
-        ["I Like it Rare: Celestion"] = true,
-        ["I Like it Rare: Galeras"] = true,
-        -- Common
-        ["Apex Predator"] = true,
-        ["Artic Extinction"] = true,
-        ["Exotic Executioner: Alizar"] = true,
-        ["Exotic Executioner: Arcterra"] = true,
-        ["Exotic Executioner: Blighthaven"] = true,
-        ["Exotic Executioner: Farside"] = true,
-        ["Exotic Executioner: Halon Ring"] = true,
-        ["Exotic Executioner: Isigrol"] = true,
-        ["Exotic Executioner: Malgrave"] = true,
-        ["Exotic Executioner: Olyssia"] = true,
-        ["Exotic Executioner: Southern Grimvault"] = true,
-        ["Exotic Executioner: Star-Comm Basin"] = true,
-        ["Exotic Executioner: The Defile"] = true,
-        ["Exotic Executioner: Western Grimvault"] = true,
-        ["Exotic Executioner: Wilderrun"] = true,
-        ["Exotic Executioner: Whitevale"] = true,
-        ["I Like it Rare: Arcterra"] = true,
-        ["I Like it Rare: Blighthaven"] = true,
-        ["I Like it Rare: Containment Facility R-12"] = true,
-        ["I Like it Rare: Crimson Badlands"] = true,
-        ["I Like it Rare: Farside"] = true,
-        ["I Like it Rare: Malgrave"] = true,
-        ["I Like it Rare: Northren Wastes"] = true,
-        ["I Like it Rare: Southern Grimvault"] = true,
-        ["I Like it Rare: Star-Comm Basin"] = true,
-        ["I Like it Rare: The Defile"] = true,
-        ["I Like it Rare: Western Grimvault"] = true,
-        ["I Like it Rare: Wilderrun"] = true,
-        ["World Boss: Big Boss Hunter"] = true
-    },
-    ["DE"] = {
-        -- Dominion Only
-        ["Die Rote Liste: Auroria"] = true,
-        ["Die Rote Liste: Deradune"] = true,
-        ["Die Rote Liste: Ellevar"] = true,
-        -- Exile Only
-        ["Die Rote Liste: Algoroc"] = true,
-        ["Die Rote Liste: Celestion"] = true,
-        ["Die Rote Liste: Galeras"] = true,
-        -- Common
-        ["Arktische Ausrottung"] = true,
-        ["Die Rote Liste: Arkterra"] = true,
-        ["Die Rote Liste: Blutrotes Hinterland"] = true,
-        ["Die Rote Liste: Die Verderbnis"] = true,
-        ["Die Rote Liste: Fäulnisrefugium"] = true,
-        ["Die Rote Liste: Fernseits"] = true,
-        ["Die Rote Liste: Isolationsanlage R-12"] = true,
-        ["Die Rote Liste: Jochgrab"] = true,
-        ["Die Rote Liste: Nördliches Ödland"] = true,
-        ["Die Rote Liste: StarKom-Becken"] = true,
-        ["Die Rote Liste: Südliche Gramkammer"] = true,
-        ["Die Rote Liste: Westliche Gramkammer"] = true,
-        ["Die Rote Liste: Wildlauf"] = true,
-        ["Exotenschreck: Alizar"] = true,
-        ["Exotenschreck: Arkterra"] = true,
-        ["Exotenschreck: Die Verderbnis"] = true,
-        ["Exotenschreck: Fäulnisrefugium"] = true,
-        ["Exotenschreck: Fernseits"] = true,
-        ["Exotenschreck: Halonring"] = true,
-        ["Exotenschreck: Isigrol"] = true,
-        ["Exotenschreck: Jochgrab"] = true,
-        ["Exotenschreck: Olyssia"] = true,
-        ["Exotenschreck: StarKom-Becken"] = true,
-        ["Exotenschreck: Südliche Gramkammer"] = true,
-        ["Exotenschreck: Weißtal"] = true,
-        ["Exotenschreck: Westliche Gramkammer"] = true,
-        ["Exotenschreck: Wildlauf"] = true,
-        ["Spitze der Nahrungspyramide"] = true,
-        ["Weltboss: Großbossjäger"] = true
-    },
-    ["FR"] = {
-        -- Dominion Only
-        ["Espèces en voie de disparition : Auroria"] = true,
-        ["Espèces en voie de disparition : Déradune"] = true,
-        ["Espèces en voie de disparition : Ellevar"] = true,
-        -- Exile Only
-        ["Espèces en voie de disparition : Célestion"] = true,
-        ["Espèces en voie de disparition : Sombreflore"] = true,
-        -- TODO: Check Exile sides
-        -- Common
-        ["Borreau exotique: Alizar"] = true,
-        ["Borreau exotique: Annequ d'Halon"] = true,
-        ["Borreau exotique: Arcterra"] = true,
-        ["Borreau exotique: Bassin de Star-Comm"] = true,
-        ["Borreau exotique: Infection"] = true,
-        ["Borreau exotique: Isigrol"] = true,
-        ["Borreau exotique: Maltombe"] = true,
-        ["Borreau exotique: Mornegeôle ouest"] = true,
-        ["Borreau exotique: Mornegeôle sud"] = true,
-        ["Borreau exotique: Olyssia"] = true,
-        ["Borreau exotique: Outre-horizon"] = true,
-        ["Borreau exotique: Refuge Impur"] = true,
-        ["Borreau exotique: Sombreflore"] = true,
-        ["Borreau exotique: Valblanc"] = true,
-        ["Boss : Le Saint des chasseurs"] = true,
-        ["Espèces en voie de disparition : Arcterra"] = true, -- Arcterra
-        ["Espèces en voie de disparition : Basin de Star-Comm"] = true, -- Starcomm Basin
-        ["Espèces en voie de disparition : Infection"] = true,  -- The Defile
-        ["Espèces en voie de disparition : Maltombe"] = true, -- Malgrave
-        ["Espèces en voie de disparition : Mornegeôle ouest"] = true, -- Western Grimvault
-        ["Espèces en voie de disparition : Mornegeôle sud"] = true, -- Southern Grimvault
-        ["Espèces en voie de disparition : Outre-horizon"] = true,  -- Farside
-        ["Espèces en voie de disparition : Refuge Impur"] = true, -- Blighthaven
-        ["Espèces en voie de disparition : Septentrion Morne"] = true,  -- Northren Wastes
-        ["Espèces en voie de disparition : Terres Maudites Écarlates"] = true,  -- Badlands
-        ["Espèces en voie de disparition : Unité de confinement R-12"] = true,  -- R12
-        ["Extinction arctique"] = true,
-        ["Prédateur ultime"] = true,
-    }
+    [2860] = "I Like it Rare: Celestion",
+    [3182] = "I Like It Rare: Ellevar",
+    [3437] = "I Like it Rare: Deradune",
+    [3508] = "I Like it Rare: Wilderrun",
+    [3513] = "I Like it Rare: Malgrave",
+    [3534] = "I Like it Rare: Algoroc",
+    [3546] = "I Like it Rare: Galeras",
+    [3772] = "I Like it Rare: Farside",
+    [3930] = "I Like it Rare: Auroria",
+    [4124] = "I Like it Rare: Southern Grimvault",
+    [4905] = "I Like it Rare: Containment Facility R-12",
+    [4906] = "I Like it Rare: Crimson Badlands",
+    [5322] = "I Like it Rare: Northern Wastes",
+    [5379] = "I Like it Rare: Western Grimvault",
+    [5420] = "I Like it Rare: Blighthaven",
+    [5693] = "I Like It Rare: The Defile",  -- Dominion
+    [5675] = "I Like It Rare: The Defile",  -- Exile
+    [5982] = "I Like it Rare: Star-Comm Basin",
+    [6087] = "I Like It Rare: Arcterra",
+    [6099] = "Apex Predator",
+    [6105] = "Arctic Extinction",
+    [6123] = "Exotic Executioner: Whitevale",
+    [6135] = "Exotic Executioner: Farside",
+    [6146] = "Exotic Executioner: Wilderrun",
+    [6154] = "Exotic Executioner: Malgrave",
+    [6171] = "Exotic Executioner: Southern Grimvault",
+    [6176] = "Exotic Executioner: Star-Comm Basin",
+    [6177] = "Exotic Executioner: Alizar",
+    [6178] = "Exotic Executioner: Olyssia",
+    [6179] = "Exotic Executioner: Isigrol",
+    [6180] = "Exotic Executioner: Halon Ring",
+    [6183] = "Exotic Executioner: Western Grimvault",
+    [6184] = "Exotic Executioner: Blighthaven",
+    [6185] = "Exotic Executioner: The Defile",
+    [6193] = "Exotic Executioner: Arcterra",
+    [6797] = "World Boss: Big Boss Hunter",
 }
 -----------------------------------------------------------------------------------------------
 -- Helper Functions
@@ -903,7 +820,7 @@ function RareTracker:InitRares()
     local arrAchievements = AchievementsLib.GetAchievements()
 
     for _, achievement in pairs(arrAchievements) do
-        if karrAchievements[self.strLocale][achievement:GetName()] then
+        if karrAchievements[achievement:GetId()] then
             for _,entry in pairs(achievement:GetChecklistItems()) do
                 table.insert(self.arRareNames, entry.strChecklistEntry)
                 self.achievementEntries[entry.strChecklistEntry] = entry.bIsComplete

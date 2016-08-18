@@ -806,8 +806,14 @@ function RareTracker:InitRares()
     for _, achievement in pairs(arrAchievements) do
         if karrAchievements[achievement:GetId()] then
             for _,entry in pairs(achievement:GetChecklistItems()) do
-                table.insert(self.arRareNames, entry.strChecklistEntry)
-                self.achievementEntries[entry.strChecklistEntry] = entry.bIsComplete
+                local strChecklistEntry = entry.strChecklistEntry
+                --Remove "World Boss: " from worldboss names in all locales
+                if achievement:GetId() == 6797 then
+                    strChecklistEntry = string.gsub(strChecklistEntry, "^W[eo]r?l[dt]%s?", "")
+                    strChecklistEntry = string.gsub(strChecklistEntry, "^[bB]oss[^:]*:%s", "")
+                end
+                table.insert(self.arRareNames, strChecklistEntry)
+                self.achievementEntries[strChecklistEntry] = entry.bIsComplete
             end
         end
     end

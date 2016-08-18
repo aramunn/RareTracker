@@ -104,18 +104,6 @@ function RareTracker:new(o)
     self.wndSelectedRare = nil
     self.arDefaultRareNames = {}
 
-    local strCancelLocale = Apollo.GetString("CRB_Cancel")
-
-    if strCancelLocale == "Cancel" then
-        self.strLocale = "EN"
-    elseif strCancelLocale == "Annuler" then
-        self.strLocale = "FR"
-    elseif strCancelLocale == "Abbrechen" then
-        self.strLocale = "DE"
-    else
-        self.strLocale = "EN"
-    end
-
     return o
 end
 

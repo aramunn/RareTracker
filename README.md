@@ -22,6 +22,8 @@ If you have **TrackMaster** installed, it will also draw a line to the unit and 
 *Config screen*
 
 # ChangeLog
+* 2.2.1
+	- Removing "Boss" or "World Boss" from the Rare Mob entries
 * 2.2
     - RareTracker no longer tracks killed mobs by default. This can be changed in the options.
     - Tracked Rares are now based on the Achievements from API 12

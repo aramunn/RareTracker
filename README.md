@@ -22,6 +22,8 @@ If you have **TrackMaster** installed, it will also draw a line to the unit and 
 *Config screen*
 
 # ChangeLog
+* 2.2.2
+	- Fixed the settings for tracking rares not being stored
 * 2.2.1
 	- Removing "Boss" or "World Boss" from the Rare Mob entries
 * 2.2

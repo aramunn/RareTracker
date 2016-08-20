@@ -770,8 +770,10 @@ function RareTracker:OnConfigure()
     self.wndConfig:FindChild("PlaySoundContainer:RadioButton"):SetCheck(self.playSound)
     self.wndConfig:FindChild("ShowHintArrowContainer:RadioButton"):SetCheck(self.showIndicator)
     self.wndConfig:FindChild("CloseEmptyTrackerContainer:RadioButton"):SetCheck(self.closeEmptyTracker)
+    self.wndConfig:FindChild("TrackKilledRaresContainer:RadioButton"):SetCheck(self.bTrackKilledRares)
     self.wndConfig:FindChild("MinLevelContainer:DaysContainer:minLevelInput"):SetText(self.minLevel or 1)
     self.wndConfig:FindChild("MaxTrackingDistanceContainer:DistanceContainer:maxDistanceInput"):SetText(self.maxTrackingDistance or 1000)
+
 end
 
 -----------------------------------------------------------------------------------------------

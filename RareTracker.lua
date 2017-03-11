@@ -146,6 +146,8 @@ function RareTracker:OnDocLoaded()
         Apollo.RegisterEventHandler("UnitCreated", "OnUnitCreated", self)
         Apollo.RegisterEventHandler("UnitDestroyed", "OnUnitDestroyed", self)
         Apollo.RegisterEventHandler("WindowManagementReady", "OnWindowManagementReady", self)
+        Apollo.RegisterEventHandler("ObjectiveTrackerLoaded", "OnObjectiveTrackerLoaded", self)
+        Event_FireGenericEvent("ObjectiveTracker_RequestParent")
 
         self.timer = ApolloTimer.Create(1/60, true, "OnTimer", self)
         self.rotationTimer = ApolloTimer.Create(1/5, true, "OnTimer", self)
@@ -442,6 +444,32 @@ end
 function RareTracker:OnWindowManagementReady()
     Event_FireGenericEvent("WindowManagementRegister", {wnd = self.wndMain, strName = "RareTracker"})
     Event_FireGenericEvent("WindowManagementAdd", {wnd = self.wndMain, strName = "RareTracker"})
+end
+
+-----------------------------------------------------------------------------------------------
+-- OnObjectiveTrackerLoaded
+--
+-- Callback event from the client to inform the Addon that the object tracker is ready
+-- and can have sub addons attached to it.
+-- We use this opportunity to add our addon to the object tracker.
+-----------------------------------------------------------------------------------------------
+function RareTracker:OnObjectiveTrackerLoaded(wndForm)
+    if not wndForm or not wndForm:IsValid() then return end
+    Apollo.RemoveEventHandler("ObjectiveTrackerLoaded", self)
+
+    self.wndObjectiveTrackerMain = Apollo.LoadForm(self.xmlDoc, "ObjectiveTrackerMain", wndForm, self)
+    self.wndObjectiveTrackerContent = self.wndObjectiveTrackerMain:FindChild("EpisodeGroupContainer")
+
+    Apollo.RegisterEventHandler("ToggleShowObjectiveRareTracker", "OnToggleShowObjectiveRareTracker", self)
+    
+    local tData = {
+        ["strAddon"] = "RareTracker",
+        ["strEventMouseLeft"] = "ToggleShowObjectiveRareTracker", 
+        ["strEventMouseRight"] = "", 
+        ["strIcon"] = "spr_ObjectiveTracker_IconContract",
+        ["strDefaultSort"] = "00000RareTracker",
+    }
+    Event_FireGenericEvent("ObjectiveTracker_NewAddOn", tData)
 end
 
 -----------------------------------------------------------------------------------------------

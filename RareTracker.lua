@@ -456,8 +456,9 @@ end
 function RareTracker:OnObjectiveTrackerLoaded(wndForm)
     if not wndForm or not wndForm:IsValid() then return end
     Apollo.RemoveEventHandler("ObjectiveTrackerLoaded", self)
-
+    local strSort = "00000RareTracker"
     self.wndObjectiveTrackerMain = Apollo.LoadForm(self.xmlDoc, "ObjectiveTrackerMain", wndForm, self)
+    self.wndObjectiveTrackerMain:SetData(strSort)
     self.wndObjectiveTrackerContent = self.wndObjectiveTrackerMain:FindChild("EpisodeGroupContainer")
 
     Apollo.RegisterEventHandler("ToggleShowObjectiveRareTracker", "OnToggleShowObjectiveRareTracker", self)
@@ -467,9 +468,20 @@ function RareTracker:OnObjectiveTrackerLoaded(wndForm)
         ["strEventMouseLeft"] = "ToggleShowObjectiveRareTracker", 
         ["strEventMouseRight"] = "", 
         ["strIcon"] = "spr_ObjectiveTracker_IconContract",
-        ["strDefaultSort"] = "00000RareTracker",
+        ["strDefaultSort"] = strSort,
     }
     Event_FireGenericEvent("ObjectiveTracker_NewAddOn", tData)
+    
+    local tData = {
+        ["strAddon"] = "RareTracker",
+        ["strText"] = tostring(0),
+        ["bChecked"] = true,
+    }
+    Event_FireGenericEvent("ObjectiveTracker_UpdateAddOn", tData)
+    
+    local wndTmp = Apollo.LoadForm("RareTracker.xml", "TrackedRare", self.wndObjectiveTrackerContent, self)
+    self.nEntryHeight = wndTmp:GetHeight()
+    wndTmp:Destroy()
 end
 
 -----------------------------------------------------------------------------------------------
@@ -576,7 +588,7 @@ function RareTracker:OnUnitCreated(unitCreated)
                 end
             end
 
-            self.wndMain:Invoke()
+            -- self.wndMain:Invoke()
         elseif unitRare.inactive then
             -- The mob was destroyed but has been found again
             self:ActivateUnit(unitRare, unitCreated)
@@ -604,7 +616,7 @@ end
 -- Creates a new entry in our list to track the rare unit.
 -----------------------------------------------------------------------------------------------
 function RareTracker:AddTrackedRare(unitRare)
-    local wndEntry = Apollo.LoadForm("RareTracker.xml", "TrackedRare", self.trackedRaresWindow, self)
+    local wndEntry = Apollo.LoadForm("RareTracker.xml", "TrackedRare", self.wndObjectiveTrackerContent, self)
     local strName = unitRare:GetName()
 
     self.arRareMobs[strName] = {
@@ -626,8 +638,10 @@ function RareTracker:AddTrackedRare(unitRare)
         wndIcon:Show(self.achievementEntries[strName])
     end
 
-    self.trackedRaresWindow:ArrangeChildrenVert()
+    self.wndObjectiveTrackerContent:ArrangeChildrenVert()
     self:ActivateUnit(self.arRareMobs[strName], unitRare)
+    
+    self:UpdateObjectiveTracker()
 end
 
 -----------------------------------------------------------------------------------------------
@@ -652,7 +666,22 @@ function RareTracker:RemoveTrackedRare(wndControl)
         self.autoCloseTimer:Start()
     end
 
-    self.trackedRaresWindow:ArrangeChildrenVert()
+    self.wndObjectiveTrackerContent:ArrangeChildrenVert()
+    
+    self:UpdateObjectiveTracker()
+end
+
+function RareTracker:UpdateObjectiveTracker()
+    local nChildren = #self.wndObjectiveTrackerContent:GetChildren()
+    local nLeft, nTop, nRight, nBottom = self.wndObjectiveTrackerMain:GetOriginalLocation():GetOffsets()
+    self.wndObjectiveTrackerMain:SetAnchorOffsets(nLeft, nTop, nRight, nBottom + (self.nEntryHeight * nChildren))
+
+    local tData = {
+        ["strAddon"] = "RareTracker",
+        ["strText"] = tostring(nChildren),
+        ["bChecked"] = true,
+    }
+    Event_FireGenericEvent("ObjectiveTracker_UpdateAddOn", tData)
 end
 
 -----------------------------------------------------------------------------------------------

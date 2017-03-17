@@ -462,7 +462,6 @@ function RareTracker:OnObjectiveTrackerLoaded(wndForm)
     self.wndObjectiveTrackerContent = self.wndObjectiveTrackerMain:FindChild("EpisodeGroupContainer")
 
     Apollo.RegisterEventHandler("ToggleShowObjectiveRareTracker", "OnToggleShowObjectiveRareTracker", self)
-    
     local tData = {
         ["strAddon"] = "RareTracker",
         ["strEventMouseLeft"] = "ToggleShowObjectiveRareTracker", 
@@ -472,16 +471,13 @@ function RareTracker:OnObjectiveTrackerLoaded(wndForm)
     }
     Event_FireGenericEvent("ObjectiveTracker_NewAddOn", tData)
     
-    local tData = {
-        ["strAddon"] = "RareTracker",
-        ["strText"] = tostring(0),
-        ["bChecked"] = true,
-    }
-    Event_FireGenericEvent("ObjectiveTracker_UpdateAddOn", tData)
-    
     local wndTmp = Apollo.LoadForm("RareTracker.xml", "TrackedRare", self.wndObjectiveTrackerContent, self)
     self.nEntryHeight = wndTmp:GetHeight()
     wndTmp:Destroy()
+    
+    self.bShowInObjectiveTracker = true
+    self.bObjectiveTrackerMinimized = false
+    self:UpdateObjectiveTracker()
 end
 
 -----------------------------------------------------------------------------------------------
@@ -671,7 +667,25 @@ function RareTracker:RemoveTrackedRare(wndControl)
     self:UpdateObjectiveTracker()
 end
 
+-----------------------------------------------------------------------------------------------
+-- OnToggleShowObjectiveRareTracker
+--
+-- Toggle showing of RareTracker on the objective tracker.
+-----------------------------------------------------------------------------------------------
+function RareTracker:OnToggleShowObjectiveRareTracker()
+    self.bShowInObjectiveTracker = not self.bShowInObjectiveTracker
+    self:UpdateObjectiveTracker()
+end
+
+-----------------------------------------------------------------------------------------------
+-- UpdateObjectiveTracker
+--
+-- Update the display on the objective tracker.
+-----------------------------------------------------------------------------------------------
 function RareTracker:UpdateObjectiveTracker()
+    self.wndObjectiveTrackerMain:Show(self.bShowInObjectiveTracker)
+    self.wndObjectiveTrackerContent:Show(not self.bObjectiveTrackerMinimized)
+
     local nChildren = #self.wndObjectiveTrackerContent:GetChildren()
     local nLeft, nTop, nRight, nBottom = self.wndObjectiveTrackerMain:GetOriginalLocation():GetOffsets()
     self.wndObjectiveTrackerMain:SetAnchorOffsets(nLeft, nTop, nRight, nBottom + (self.nEntryHeight * nChildren))
@@ -679,9 +693,35 @@ function RareTracker:UpdateObjectiveTracker()
     local tData = {
         ["strAddon"] = "RareTracker",
         ["strText"] = tostring(nChildren),
-        ["bChecked"] = true,
+        ["bChecked"] = self.bShowInObjectiveTracker,
     }
     Event_FireGenericEvent("ObjectiveTracker_UpdateAddOn", tData)
+end
+
+-----------------------------------------------------------------------------------------------
+-- Methods for interacting with the objective tracker minimize button.
+-----------------------------------------------------------------------------------------------
+function RareTracker:OnEpisodeGroupControlBackerMouseEnter(wndHandler, wndControl)
+	if wndHandler == wndControl then
+		wndHandler:FindChild("EpisodeGroupMinimizeBtn"):Show(true)
+	end
+end
+
+function RareTracker:OnEpisodeGroupControlBackerMouseExit(wndHandler, wndControl)
+	if wndHandler == wndControl then
+		local wndBtn = wndHandler:FindChild("EpisodeGroupMinimizeBtn")
+		wndBtn:Show(wndBtn:IsChecked())
+	end
+end
+
+function RareTracker:OnContentGroupMinimizedBtnChecked(wndHandler, wndControl, eMouseButton)
+	self.bObjectiveTrackerMinimized = true
+	self:UpdateObjectiveTracker()
+end
+
+function RareTracker:OnContentGroupMinimizedBtnUnChecked(wndHandler, wndControl, eMouseButton)
+	self.bObjectiveTrackerMinimized = false
+	self:UpdateObjectiveTracker()
 end
 
 -----------------------------------------------------------------------------------------------

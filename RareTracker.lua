@@ -215,6 +215,14 @@ function RareTracker:InitConfigOptions()
         self.bTrackKilledRares = false
     end
 
+    if self.bShowInObjectiveTracker == nil then
+        self.bShowInObjectiveTracker = true
+    end
+
+    if self.bMinimizeInObjectiveTracker == nil then
+        self.bMinimizeInObjectiveTracker = false
+    end
+
     self:InitRares()
 end
 
@@ -361,6 +369,8 @@ function RareTracker:OnSave(eLevel)
     tSavedData.savedPatchVersion = self.nPatchVersion
     tSavedData.tLocations = self.tLocations
     tSavedData.bTrackRares = self.bTrackKilledRares
+    tSavedData.bShowInObjectiveTracker = self.bShowInObjectiveTracker
+    tSavedData.bMinimizeInObjectiveTracker = self.bMinimizeInObjectiveTracker
 
     return tSavedData
 end
@@ -431,6 +441,14 @@ function RareTracker:OnRestore(eLevel, tData)
         self.bTrackKilledRares = tData.bTrackRares
     end
 
+    if (tData.bShowInObjectiveTracker ~= nil) then
+        self.bShowInObjectiveTracker = tData.bShowInObjectiveTracker
+    end
+
+    if (tData.bMinimizeInObjectiveTracker ~= nil) then
+        self.bMinimizeInObjectiveTracker = tData.bMinimizeInObjectiveTracker
+    end
+
     self:InitRares()
 end
 
@@ -461,6 +479,10 @@ function RareTracker:OnObjectiveTrackerLoaded(wndForm)
     self.wndObjectiveTrackerMain:SetData(strSort)
     self.wndObjectiveTrackerContent = self.wndObjectiveTrackerMain:FindChild("EpisodeGroupContainer")
 
+    local wndTmp = Apollo.LoadForm("RareTracker.xml", "TrackedRare", self.wndObjectiveTrackerContent, self)
+    self.nEntryHeight = wndTmp:GetHeight()
+    wndTmp:Destroy()
+
     Apollo.RegisterEventHandler("ToggleShowObjectiveRareTracker", "OnToggleShowObjectiveRareTracker", self)
     local tData = {
         ["strAddon"] = "RareTracker",
@@ -470,13 +492,6 @@ function RareTracker:OnObjectiveTrackerLoaded(wndForm)
         ["strDefaultSort"] = strSort,
     }
     Event_FireGenericEvent("ObjectiveTracker_NewAddOn", tData)
-    
-    local wndTmp = Apollo.LoadForm("RareTracker.xml", "TrackedRare", self.wndObjectiveTrackerContent, self)
-    self.nEntryHeight = wndTmp:GetHeight()
-    wndTmp:Destroy()
-    
-    self.bShowInObjectiveTracker = true
-    self.bObjectiveTrackerMinimized = false
     self:UpdateObjectiveTracker()
 end
 
@@ -684,7 +699,7 @@ end
 -----------------------------------------------------------------------------------------------
 function RareTracker:UpdateObjectiveTracker()
     self.wndObjectiveTrackerMain:Show(self.bShowInObjectiveTracker)
-    self.wndObjectiveTrackerContent:Show(not self.bObjectiveTrackerMinimized)
+    self.wndObjectiveTrackerContent:Show(not self.bMinimizeInObjectiveTracker)
 
     local nChildren = #self.wndObjectiveTrackerContent:GetChildren()
     local nLeft, nTop, nRight, nBottom = self.wndObjectiveTrackerMain:GetOriginalLocation():GetOffsets()
@@ -715,12 +730,12 @@ function RareTracker:OnEpisodeGroupControlBackerMouseExit(wndHandler, wndControl
 end
 
 function RareTracker:OnContentGroupMinimizedBtnChecked(wndHandler, wndControl, eMouseButton)
-	self.bObjectiveTrackerMinimized = true
+	self.bMinimizeInObjectiveTracker = true
 	self:UpdateObjectiveTracker()
 end
 
 function RareTracker:OnContentGroupMinimizedBtnUnChecked(wndHandler, wndControl, eMouseButton)
-	self.bObjectiveTrackerMinimized = false
+	self.bMinimizeInObjectiveTracker = false
 	self:UpdateObjectiveTracker()
 end
 
